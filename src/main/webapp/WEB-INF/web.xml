@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+        version="2.5">
+    
+    <servlet>
+        <servlet-name>Stats</servlet-name>
+        <servlet-class>com.insano10.explorerchallenge.servlets.MazeTraversalServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ExplorerChallengeRedirect</servlet-name>
+        <servlet-class>com.insano10.explorerchallenge.servlets.ExplorerChallengeRedirectServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>ExplorerChallengeRedirect</servlet-name>
+        <url-pattern>/index.html</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Stats</servlet-name>
+        <url-pattern>/miru/stats</url-pattern>
+    </servlet-mapping>
+</web-app>
