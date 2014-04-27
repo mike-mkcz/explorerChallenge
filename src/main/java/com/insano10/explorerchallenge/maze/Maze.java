@@ -1,34 +1,20 @@
 package com.insano10.explorerchallenge.maze;
 
-import java.io.File;
-
 public class Maze
 {
-    private int maxXCoordinate;
-    private int maxYCoordinate;
-    private boolean[][] grid;
-    private Coordinate entrance;
-    private Coordinate exit;
-    private boolean keyRequiredToExit;
+    private final int maxXCoordinate;
+    private final int maxYCoordinate;
+    private final boolean[][] grid;
+    private final Coordinate entrance;
+    private final Coordinate exit;
 
-    public Maze(boolean[][] grid, Coordinate entrance, Coordinate exit, boolean keyRequiredToExit)
+    public Maze(boolean[][] grid, Coordinate entrance, Coordinate exit)
     {
         this.grid = grid;
         this.entrance = entrance;
         this.exit = exit;
-        this.keyRequiredToExit = keyRequiredToExit;
         this.maxXCoordinate = grid.length - 1;
         this.maxYCoordinate = grid[0].length - 1;
-    }
-
-    public void load(File file)
-    {
-
-    }
-
-    public boolean isKeyRequiredToExitMaze()
-    {
-        return keyRequiredToExit;
     }
 
     public Coordinate move(Coordinate fromLocation, Direction direction) throws InvalidMoveException

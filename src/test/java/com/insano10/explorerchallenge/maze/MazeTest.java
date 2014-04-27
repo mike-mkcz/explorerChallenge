@@ -1,5 +1,6 @@
 package com.insano10.explorerchallenge.maze;
 
+import com.insano10.explorerchallenge.maze.utils.TestMazes;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,11 +11,8 @@ import static org.junit.Assert.assertFalse;
 
 public class MazeTest
 {
-    private final boolean[][] grid = new boolean[5][5];
-    private Coordinate entrance;
-    private Coordinate exit;
-
     private Maze maze;
+    private Coordinate entrance;
 
     @Before
     public void setUp() throws Exception
@@ -30,34 +28,8 @@ public class MazeTest
         [0,0] is at bottom left corner
         */
 
-        entrance = Coordinate.create(0, 3);
-        exit = Coordinate.create(3, 0);
-
-        grid[0][0] = false;
-        grid[0][1] = false;
-        grid[0][2] = false;
-        grid[0][3] = true;
-        grid[0][4] = false;
-
-        grid[1][0] = false;
-        grid[1][1] = true;
-        grid[1][2] = true;
-        grid[1][3] = true;
-        grid[1][4] = false;
-
-        grid[2][0] = false;
-        grid[2][1] = true;
-        grid[2][2] = false;
-        grid[2][3] = false;
-        grid[2][4] = false;
-
-        grid[3][0] = true;
-        grid[3][1] = true;
-        grid[3][2] = false;
-        grid[3][3] = false;
-        grid[3][4] = false;
-
-        maze = new Maze(grid, entrance, exit, false);
+        maze = TestMazes.testMazeOne();
+        entrance = maze.getEntrance();
     }
 
     @Test
@@ -70,7 +42,7 @@ public class MazeTest
     @Test
     public void shouldRecogniseExit()
     {
-       assertTrue(maze.isExit(exit));
+       assertTrue(maze.isExit(Coordinate.create(3, 0)));
     }
 
     @Test
