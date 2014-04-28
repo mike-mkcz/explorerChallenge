@@ -31,7 +31,10 @@ public class ExplorerServlet extends HttpServlet
     {
         if (request.getPathInfo().equals("/whichWayNow"))
         {
-            response.getWriter().println(GSON.toJson(explorer.whichWayNow()));
+            Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
+            Direction[] availableDirections = GSON.fromJson(request.getParameter("availableDirections"), Direction[].class);
+
+            response.getWriter().println(GSON.toJson(explorer.whichWayNow(fromLocation, availableDirections)));
 
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);

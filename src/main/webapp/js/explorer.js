@@ -1,6 +1,6 @@
 function whichWay()
 {
-    $.getJSON( "explorer/whichWayNow", function( data )
+    $.getJSON( "explorer/whichWayNow", {"fromLocation":"{x:1,y:1}", "availableDirections":"[EAST,WEST]"}, function( data )
     {
        console.log("i'm gonna go " + data.direction);
     });
@@ -12,7 +12,7 @@ function enterMaze()
     $.post( "explorer/enterMaze", {entrance: "{x:1,y:1}"});
 }
 
-function move()
+function moveExplorer()
 {
     console.log("posting");
     $.post( "explorer/move", {fromLocation: "{x:0,y:0}", direction: "EAST"});

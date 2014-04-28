@@ -4,16 +4,20 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         version="2.5">
-    
+
+    <servlet>
+        <servlet-name>ExplorerChallengeRedirect</servlet-name>
+        <servlet-class>com.insano10.explorerchallenge.servlets.ExplorerChallengeRedirectServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>Explorer</servlet-name>
         <servlet-class>com.insano10.explorerchallenge.servlets.ExplorerServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ExplorerChallengeRedirect</servlet-name>
-        <servlet-class>com.insano10.explorerchallenge.servlets.ExplorerChallengeRedirectServlet</servlet-class>
+        <servlet-name>Maze</servlet-name>
+        <servlet-class>com.insano10.explorerchallenge.servlets.MazeServlet</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>ExplorerChallengeRedirect</servlet-name>
         <url-pattern>/index.html</url-pattern>
@@ -21,5 +25,9 @@
     <servlet-mapping>
         <servlet-name>Explorer</servlet-name>
         <url-pattern>/explorerchallenge/explorer/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Maze</servlet-name>
+        <url-pattern>/explorerchallenge/maze/*</url-pattern>
     </servlet-mapping>
 </web-app>

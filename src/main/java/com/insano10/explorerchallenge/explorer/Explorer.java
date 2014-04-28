@@ -7,7 +7,7 @@ public interface Explorer
 {
     void enterMaze(Coordinate startLocation);
 
-    Direction whichWayNow();
+    Direction whichWayNow(Coordinate fromLocation, Direction[] availableDirections);
 
     void move(Coordinate fromLocation, Direction direction);
 

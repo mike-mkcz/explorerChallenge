@@ -4,6 +4,8 @@ import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
 import org.apache.log4j.Logger;
 
+import java.util.Arrays;
+
 public class StupidExplorer implements Explorer
 {
     private static final Logger LOGGER = Logger.getLogger(StupidExplorer.class);
@@ -15,9 +17,9 @@ public class StupidExplorer implements Explorer
     }
 
     @Override
-    public Direction whichWayNow()
+    public Direction whichWayNow(Coordinate fromLocation, Direction[] availableDirections)
     {
-        LOGGER.info("I like east, I'm gonna go east");
+        LOGGER.info("From " + fromLocation + " despite being told I can go " + Arrays.toString(availableDirections) + " I think I'll go EAST");
         return Direction.EAST;
     }
 

@@ -4,7 +4,8 @@
         <title>Explorer Challenge</title>
         <script src="../lib/js/jquery-2.1.0.min.js"></script>
         <script src="../lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
-        <script src="../js/mazeTraversal.js"></script>
+        <script src="../js/explorer.js"></script>
+        <script src="../js/maze.js"></script>
 
         <link href="../lib/bootstrap-3.1.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/explorerChallenge.css" rel="stylesheet">
@@ -13,9 +14,14 @@
     <body>
 
     <a class="btn btn-primary" role="button" onclick="whichWay()">Which Way?</a>
-    <a class="btn btn-info" role="button" onclick="move()">Move</a>
+    <a class="btn btn-info" role="button" onclick="moveExplorer()">Move</a>
     <a class="btn btn-success" role="button" onclick="enterMaze()">Enter Maze</a>
     <a class="btn btn-warning" role="button" onclick="exitMaze()">Exit Maze</a>
+    <br/>
+    <a class="btn btn-primary" role="button" onclick="attemptMazeMove()">Attempt Move</a>
+    <a class="btn btn-info" role="button" onclick="getEntrance()">Get Entrance</a>
+    <a class="btn btn-success" role="button" onclick="setMaze()">Set Maze</a>
+
 
     </body>
 </html>
