@@ -2,11 +2,15 @@ function attemptMazeMove()
 {
     $.getJSON( "maze/move", {fromLocation: "{x:0,y:0}", direction: "EAST"}, function( data )
     {
-       console.log("new location: [" + data.x + "," + data.y + "]");
-       console.log("exit reached: " + data.exit);
+        updateLog("now at location [" + data.x + "," + data.y + "]");
+
+        if(data.exit)
+        {
+            updateLog("exit reached");
+        }
     }).fail(function()
     {
-        console.log( "failed move" );
+        updateLog("failed move");
     });
 }
 
@@ -14,13 +18,13 @@ function getEntrance()
 {
     $.getJSON( "maze/entrance", function( data )
     {
-        console.log("entrance: [" + data.x + "," + data.y + "]");
+        updateLog("entrance is at [" + data.x + "," + data.y + "]");
     });
 }
 
 function setMaze()
 {
-    console.log("setting maze");
+    updateLog("loading maze one.maze");
     $.post( "maze/maze", {file: "one.maze"});
 }
 

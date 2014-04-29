@@ -20,6 +20,20 @@ public class MazeServlet extends HttpServlet
     private MazeFileLoader mazeLoader = new MazeFileLoader();
     private Maze maze;
 
+    @Override
+    public void init() throws ServletException
+    {
+        super.init();
+        try
+        {
+            loadMaze("one.maze");
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("Failed to load starting map one.maze");
+        }
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setContentType("application/json");
@@ -58,14 +72,19 @@ public class MazeServlet extends HttpServlet
     {
         if (request.getPathInfo().equals("/maze"))
         {
-            String mazeFileName = request.getParameter("file");
-            File mazeFile = new File(MAP_ROOT + mazeFileName);
-
-            maze = mazeLoader.loadFromFile(mazeFile);
+            loadMaze(request.getParameter("file"));
         }
        else
         {
             throw new RuntimeException("Unknown post: " + request.getPathInfo());
         }
+    }
+
+    private void loadMaze(String fileName) throws IOException
+    {
+        String mazeFileName = fileName;
+        File mazeFile = new File(MAP_ROOT + mazeFileName);
+
+        maze = mazeLoader.loadFromFile(mazeFile);
     }
 }

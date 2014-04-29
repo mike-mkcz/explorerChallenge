@@ -2,14 +2,20 @@
 <html>
     <head>
         <title>Explorer Challenge</title>
-        <script src="../lib/js/jquery-2.1.0.min.js"></script>
-        <script src="../lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
-        <script src="../js/explorer.js"></script>
-        <script src="../js/maze.js"></script>
 
         <link href="../lib/bootstrap-3.1.1/css/bootstrap.min.css" rel="stylesheet">
+        <link href="../lib/jscrollpane/css/jquery.jscrollpane.css" rel="stylesheet">
         <link href="../css/explorerChallenge.css" rel="stylesheet">
 
+        <script src="../lib/js/jquery-2.1.0.min.js"></script>
+        <script src="../lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
+        <script src="../lib/jscrollpane/js/jquery.mousewheel.js"></script>
+        <script src="../lib/jscrollpane/js/mwheelIntent.js"></script>
+        <script src="../lib/jscrollpane/js/jquery.jscrollpane.min.js"></script>
+        <script src="../js/log.js"></script>
+        <script src="../js/onload.js"></script>
+        <script src="../js/explorer.js"></script>
+        <script src="../js/maze.js"></script>
     </head>
     <body>
 
@@ -22,6 +28,13 @@
     <a class="btn btn-info" role="button" onclick="getEntrance()">Get Entrance</a>
     <a class="btn btn-success" role="button" onclick="setMaze()">Set Maze</a>
 
+    <!--<div id="container">-->
+        <!--<div class="scroll-pane">-->
+            <!--<p class="log"></p>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <div class="scroll"></div>
 
     </body>
 </html>
