@@ -1,5 +1,8 @@
 package com.insano10.explorerchallenge.maze;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Maze
 {
     private final int maxXCoordinate;
@@ -49,6 +52,42 @@ public class Maze
            location.getY() >= 0 && location.getY() <= maxYCoordinate)
         {
             return true;
+        }
+        return false;
+    }
+
+    public Direction[] getExitsFrom(Coordinate location)
+    {
+        List<Direction> exits = new ArrayList<>();
+
+        if(canMoveToLocation(Coordinate.create(location.getX(), location.getY()+1)))
+        {
+            exits.add(Direction.NORTH);
+        }
+        if(canMoveToLocation(Coordinate.create(location.getX(), location.getY()-1)))
+        {
+            exits.add(Direction.SOUTH);
+        }
+        if(canMoveToLocation(Coordinate.create(location.getX()+1, location.getY())))
+        {
+            exits.add(Direction.EAST);
+        }
+        if(canMoveToLocation(Coordinate.create(location.getX()-1, location.getY())))
+        {
+            exits.add(Direction.WEST);
+        }
+
+        return exits.toArray(new Direction[exits.size()]);
+    }
+
+    private boolean canMoveToLocation(Coordinate location)
+    {
+        if(coordinateIsWithinMaze(location))
+        {
+            if(grid[location.getX()][location.getY()])
+            {
+                return true;
+            }
         }
         return false;
     }

@@ -16,9 +16,23 @@ function attemptMazeMove()
 
 function getEntrance()
 {
-    $.getJSON( "maze/entrance", function( data )
+    return $.getJSON( "maze/entrance", function( data )
     {
         updateLog("entrance is at [" + data.x + "," + data.y + "]");
+    });
+}
+
+function getAvailableExits()
+{
+    $.getJSON( "maze/exits", {fromLocation: "{x:0,y:3}"}, function( data )
+    {
+        exitString = "";
+        $.each(data, function( index, value ) {
+            console.log(index + " - " + value.direction);
+            exitString += value.direction + ",";
+        });
+        updateLog("exits available [" +exitString + "]");
+
     });
 }
 

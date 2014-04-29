@@ -40,6 +40,27 @@ public class MazeTest
     }
 
     @Test
+    public void shouldGetAvailableExitDirectionsFromLocationWithOnlyOneExit()
+    {
+        Direction[] exits = maze.getExitsFrom(entrance);
+
+        assertThat(exits.length, equalTo(1));
+        assertThat(exits[0], equalTo(Direction.EAST));
+    }
+
+    @Test
+    public void shouldGetAvailableExitDirectionsFromLocationWithMultipleExits()
+    {
+        Coordinate location = Coordinate.create(3, 1);
+        Direction[] exits = maze.getExitsFrom(location);
+
+        assertThat(exits.length, equalTo(2));
+        assertThat(exits[0], equalTo(Direction.SOUTH));
+        assertThat(exits[1], equalTo(Direction.WEST));
+    }
+
+
+    @Test
     public void shouldRecogniseExit()
     {
        assertTrue(maze.isExit(Coordinate.create(3, 0)));

@@ -61,6 +61,12 @@ public class MazeServlet extends HttpServlet
         {
             response.getWriter().println(GSON.toJson(maze.getEntrance()));
         }
+        else if (request.getPathInfo().equals("/exits"))
+        {
+            Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
+
+            response.getWriter().println(GSON.toJson(maze.getExitsFrom(fromLocation)));
+        }
         else
         {
             throw new RuntimeException("Unknown get request: " + request.getPathInfo());
