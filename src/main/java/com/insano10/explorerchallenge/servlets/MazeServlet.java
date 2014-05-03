@@ -3,7 +3,6 @@ package com.insano10.explorerchallenge.servlets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.insano10.explorerchallenge.maze.*;
-import com.insano10.explorerchallenge.serialisation.DirectionSerialiser;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +13,7 @@ import java.io.IOException;
 
 public class MazeServlet extends HttpServlet
 {
-    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Direction.class, new DirectionSerialiser()).create();
+    private static final Gson GSON = new GsonBuilder().create();
     private static final String MAP_ROOT = "src/main/resources/mazes/";
 
     private MazeFileLoader mazeLoader = new MazeFileLoader();
@@ -47,10 +46,11 @@ public class MazeServlet extends HttpServlet
             try
             {
                 Coordinate newLocation = maze.move(fromLocation, direction);
-
                 boolean exitReached = maze.isExit(newLocation);
-                response.getWriter().println(GSON.toJson(newLocation));
-                response.getWriter().println("{exit: " + exitReached + "}");
+
+                MoveOutcome moveOutcome = new MoveOutcome(newLocation, exitReached);
+
+                response.getWriter().println(GSON.toJson(moveOutcome));
 
             } catch (InvalidMoveException e)
             {

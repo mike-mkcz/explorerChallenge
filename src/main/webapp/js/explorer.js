@@ -1,8 +1,9 @@
-function whichWay()
+function whichWay(fromLocation, availableDirections)
 {
-    $.getJSON( "explorer/whichWayNow", {"fromLocation":"{x:1,y:1}", "availableDirections":"[EAST,WEST]"}, function( data )
+    updateLog("which way shall I go?");
+    return $.getJSON( "explorer/whichWayNow", {fromLocation: JSON.stringify(fromLocation), availableDirections:JSON.stringify(availableDirections)}, function( data )
     {
-        updateLog("choosing to go" + data.direction);
+        updateLog("choosing to go " + data);
     });
 }
 
@@ -12,10 +13,10 @@ function enterMaze()
     $.post( "explorer/enterMaze", {entrance: "{x:1,y:1}"});
 }
 
-function moveExplorer()
+function moveExplorer(fromLocation, direction)
 {
     updateLog("explorer is moving");
-    $.post( "explorer/move", {fromLocation: "{x:0,y:0}", direction: "EAST"});
+    return $.post( "explorer/move", {fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)});
 }
 
 function exitMaze()

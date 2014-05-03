@@ -25,12 +25,13 @@
     <a class="btn btn-success" role="button" onclick="enterMaze()">Enter Maze</a>
     <a class="btn btn-warning" role="button" onclick="exitMaze()">Exit Maze</a>
     <br/>
-    <a class="btn btn-primary" role="button" onclick="attemptMazeMove()">Attempt Move</a>
+    <a class="btn btn-primary" role="button" onclick="attemptMazeMove(explorerLocation, 'EAST')">Attempt Move</a>
     <a class="btn btn-info" role="button" onclick="getEntrance()">Get Entrance</a>
     <a class="btn btn-success" role="button" onclick="setMaze()">Set Maze</a>
-    <a class="btn btn-warning" role="button" onclick="getAvailableExits()">Get Exits</a>
+    <a class="btn btn-warning" role="button" onclick="getAvailableExits({x:0,y:3})">Get Exits</a>
     <br/>
-    <a class="btn btn-success" role="button" onclick="moveCycle()">Move cycle</a>
+    <a class="btn btn-success" role="button" onclick="startMaze()">Start Maze</a>
+    <a class="btn btn-success" role="button" onclick="moveCycle(explorerLocation)">Move Cycle</a>
 
     <div class="scroll"></div>
 

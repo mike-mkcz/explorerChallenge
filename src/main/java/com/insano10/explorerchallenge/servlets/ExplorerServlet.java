@@ -6,7 +6,6 @@ import com.insano10.explorerchallenge.explorer.Explorer;
 import com.insano10.explorerchallenge.explorer.StupidExplorer;
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
-import com.insano10.explorerchallenge.serialisation.DirectionSerialiser;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +15,7 @@ import java.io.IOException;
 
 public class ExplorerServlet extends HttpServlet
 {
-    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Direction.class, new DirectionSerialiser()).create();
+    private static final Gson GSON = new GsonBuilder().create();
 
     private Explorer explorer;
 

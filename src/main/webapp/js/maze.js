@@ -1,35 +1,36 @@
-function attemptMazeMove()
+function attemptMazeMove(fromLocation, direction)
 {
-    $.getJSON( "maze/move", {fromLocation: "{x:0,y:0}", direction: "EAST"}, function( data )
+    updateLog("Can I move " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation) + "?");
+    return $.getJSON( "maze/move", {fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)}, function( data )
     {
-        updateLog("now at location [" + data.x + "," + data.y + "]");
+        console.log(data);
+        updateLog("Valid move!, New location is [" + data.location.x + "," + data.location.y + "]");
 
         if(data.exit)
         {
             updateLog("exit reached");
         }
-    }).fail(function()
-    {
-        updateLog("failed move");
     });
 }
 
 function getEntrance()
 {
+    updateLog("Finding entrance...");
     return $.getJSON( "maze/entrance", function( data )
     {
         updateLog("entrance is at [" + data.x + "," + data.y + "]");
     });
 }
 
-function getAvailableExits()
+function getAvailableExits(location)
 {
-    $.getJSON( "maze/exits", {fromLocation: "{x:0,y:3}"}, function( data )
+    updateLog("What exits are available from " + JSON.stringify(location) + "?");
+    return $.getJSON( "maze/exits", {fromLocation: JSON.stringify(location)}, function( data )
     {
         exitString = "";
         $.each(data, function( index, value ) {
-            console.log(index + " - " + value.direction);
-            exitString += value.direction + ",";
+            console.log(index + " - " + value);
+            exitString += value + ",";
         });
         updateLog("exits available [" +exitString + "]");
 
