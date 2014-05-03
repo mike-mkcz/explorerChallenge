@@ -30,10 +30,17 @@ function moveCycle(location)
                                 {
                                     updateLog("move complete. Explorer is now at " + JSON.stringify(outcome.location));
                                     explorerLocation = outcome.location;
+
+                                    if(outcome.exitReached)
+                                    {
+                                        updateLog("Exit reached!")
+                                    }
+                                    updateLog("-------------------------");
                                 });
                         }).error(function(outcome)
                         {
                             updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(location));
+                            updateLog("-------------------------");
                         });
                 });
 

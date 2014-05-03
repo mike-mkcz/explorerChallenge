@@ -39,7 +39,7 @@ function getAvailableExits(location)
 
 function setMaze()
 {
-    updateLog("loading maze one.maze");
-    $.post( "maze/maze", {file: "one.maze"});
+    updateLog("loading maze theonlywayiseast.maze");
+    $.post( "maze/maze", {file: "theonlywayiseast.maze"});
 }
 
