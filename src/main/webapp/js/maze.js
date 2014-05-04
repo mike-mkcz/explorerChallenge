@@ -60,9 +60,10 @@ function getMazes()
 function setMaze(mazeName)
 {
     updateLog("loading maze " + mazeName);
-    $.post( "maze/maze", {file: mazeName}, function(data)
+    $.post( "maze/maze", {file: mazeName}, function(mazeDefinition)
     {
         $(".current-maze").val("Current maze: " + mazeName);
+        drawMaze($.parseJSON(mazeDefinition));
     });
 }
 

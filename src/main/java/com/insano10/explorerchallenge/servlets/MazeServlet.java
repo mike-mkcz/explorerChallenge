@@ -80,7 +80,8 @@ public class MazeServlet extends HttpServlet
     {
         if (request.getPathInfo().equals("/maze"))
         {
-            loadMaze(request.getParameter("file"));
+            maze = loadMaze(request.getParameter("file"));
+            response.getWriter().println(GSON.toJson(maze));
         }
        else
         {
@@ -88,10 +89,10 @@ public class MazeServlet extends HttpServlet
         }
     }
 
-    private void loadMaze(String fileName) throws IOException
+    private Maze loadMaze(String fileName) throws IOException
     {
         File mazeFile = new File(MAP_ROOT + fileName);
 
-        maze = mazeLoader.loadFromFile(mazeFile);
+        return mazeLoader.loadFromFile(mazeFile);
     }
 }

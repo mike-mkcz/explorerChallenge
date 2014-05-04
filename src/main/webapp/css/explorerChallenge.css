@@ -6,7 +6,7 @@
 
 .scroll {
     width: 400px;
-    height:600px;
+    height:800px;
     overflow: auto;
     border: 1px #ccc solid;
     border-radius: 4px;
