@@ -3,6 +3,7 @@ package com.insano10.explorerchallenge.servlets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.insano10.explorerchallenge.explorer.Explorer;
+import com.insano10.explorerchallenge.explorer.LeftHandWallExplorer;
 import com.insano10.explorerchallenge.explorer.StupidExplorer;
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
@@ -23,7 +24,7 @@ public class ExplorerServlet extends HttpServlet
     public void init() throws ServletException
     {
         super.init();
-        explorer = new StupidExplorer();
+        explorer = new LeftHandWallExplorer();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException

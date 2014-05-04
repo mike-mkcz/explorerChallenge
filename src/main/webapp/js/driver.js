@@ -35,7 +35,6 @@ function moveCycle(location)
                             moveExplorer(location, outcome.location).
                                 done(function()
                                 {
-                                    updateLog("move complete");
                                     explorerLocation = outcome.location;
 
                                     if(outcome.exitReached)
