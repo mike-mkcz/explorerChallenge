@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class MazeServlet extends HttpServlet
@@ -67,6 +68,19 @@ public class MazeServlet extends HttpServlet
 
             response.getWriter().println(GSON.toJson(maze.getExitsFrom(fromLocation)));
         }
+        else if (request.getPathInfo().equals("/mazes"))
+        {
+            File mapFolder = new File(MAP_ROOT);
+            String[] mazeFiles = mapFolder.list(new FilenameFilter()
+            {
+                @Override
+                public boolean accept(File dir, String name)
+                {
+                    return name.endsWith(".maze");
+                }
+            });
+            response.getWriter().println(GSON.toJson(mazeFiles));
+        }
         else
         {
             throw new RuntimeException("Unknown get request: " + request.getPathInfo());
@@ -88,8 +102,7 @@ public class MazeServlet extends HttpServlet
 
     private void loadMaze(String fileName) throws IOException
     {
-        String mazeFileName = fileName;
-        File mazeFile = new File(MAP_ROOT + mazeFileName);
+        File mazeFile = new File(MAP_ROOT + fileName);
 
         maze = mazeLoader.loadFromFile(mazeFile);
     }

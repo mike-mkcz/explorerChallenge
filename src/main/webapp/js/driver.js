@@ -6,7 +6,7 @@ function startMaze()
     getEntrance().
         done(function(location)
         {
-            moveCycle(location);
+            explorerLocation = location;
 
         }).fail(function()
         {

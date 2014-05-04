@@ -37,9 +37,30 @@ function getAvailableExits(location)
     });
 }
 
-function setMaze()
+function setMaze(mazeName)
 {
-    updateLog("loading maze theonlywayiseast.maze");
-    $.post( "maze/maze", {file: "theonlywayiseast.maze"});
+    updateLog("loading maze " + mazeName);
+    $.post( "maze/maze", {file: mazeName});
 }
 
+function getMazes()
+{
+    return $.getJSON( "maze/mazes", function(data)
+    {
+        $('.maze-list').empty();
+        $.each(data, function(index, value) {
+
+            console.log(value);
+            $('.maze-list').append(
+                $('<li/>', {
+                    'class': 'maze-list-item',
+                    html: $('<a/>', {
+                        href: '#',
+                        text: value,
+                        onclick: 'setMaze("' + value + '")'
+                    })
+                })
+            );
+        });
+    });
+}
