@@ -1,14 +1,10 @@
 package com.insano10.explorerchallenge.maze;
 
-import org.apache.log4j.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Maze
 {
-    private static final Logger LOGGER = Logger.getLogger(Maze.class);
-
     private final int maxXCoordinate;
     private final int maxYCoordinate;
     private final boolean[][] grid;
@@ -81,7 +77,6 @@ public class Maze
             exits.add(Direction.WEST);
         }
 
-        LOGGER.info("Exits from " + location + " are " + exits);
         return exits.toArray(new Direction[exits.size()]);
     }
 

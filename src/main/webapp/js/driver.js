@@ -6,8 +6,11 @@ function startMaze()
     getEntrance().
         done(function(location)
         {
-            explorerLocation = location;
-
+            enterMaze(location).
+                done(function(data)
+                {
+                    explorerLocation = location;
+                });
         }).fail(function()
         {
             updateLog("startMaze() failed");
@@ -33,7 +36,8 @@ function moveCycle(location)
 
                                     if(outcome.exitReached)
                                     {
-                                        updateLog("Exit reached!")
+                                        updateLog("Exit reached!");
+                                        exitMaze();
                                     }
                                     updateLog("-------------------------");
                                 });

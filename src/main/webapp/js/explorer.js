@@ -15,10 +15,10 @@ function getName()
     });
 }
 
-function enterMaze()
+function enterMaze(location)
 {
     updateLog("entering maze");
-    $.post( "explorer/enterMaze", {entrance: "{x:1,y:1}"});
+    return $.post( "explorer/enterMaze", {entrance: JSON.stringify(location)});
 }
 
 function moveExplorer(fromLocation, direction)
