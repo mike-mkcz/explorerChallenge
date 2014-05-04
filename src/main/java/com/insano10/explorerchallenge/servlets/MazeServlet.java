@@ -21,20 +21,6 @@ public class MazeServlet extends HttpServlet
     private MazeFileLoader mazeLoader = new MazeFileLoader();
     private Maze maze;
 
-    @Override
-    public void init() throws ServletException
-    {
-        super.init();
-        try
-        {
-            loadMaze("theonlywayiseast.maze");
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException("Failed to load starting map one.maze");
-        }
-    }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setContentType("application/json");
