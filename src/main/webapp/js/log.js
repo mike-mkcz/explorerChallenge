@@ -12,7 +12,7 @@ function initialiseLog()
 
 function updateLog(contentLine)
 {
-    scrollApi.getContentPane().append(contentLine + "<br/>");
+    scrollApi.getContentPane().append("<p style='padding-left: 10px; margin:0'>" + contentLine + "</p>");
     scrollApi.reinitialise();
     scrollApi.scrollToPercentY(100);
 }

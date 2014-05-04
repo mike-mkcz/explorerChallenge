@@ -1,5 +1,17 @@
+.load-maze-row {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+}
+
 .scroll {
     width: 400px;
-    height:500px;
+    height:600px;
     overflow: auto;
+    border: 1px #ccc solid;
+    border-radius: 4px;
+}
+
+.maze-container {
+    margin-left: 50px;
 }
