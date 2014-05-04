@@ -28,7 +28,7 @@ function getAvailableExits(location)
     {
         exitString = "";
         $.each(data, function( index, value ) {
-            exitString += value + ",";
+            exitString += value + " ";
         });
         updateLog("exits available [" +exitString + "]");
 

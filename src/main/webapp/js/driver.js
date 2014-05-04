@@ -3,17 +3,21 @@ var explorerLocation;
 
 function startMaze()
 {
-    getEntrance().
-        done(function(location)
+    getName().
+        done(function(name)
         {
-            enterMaze(location).
-                done(function(data)
+            getEntrance().
+                done(function(location)
                 {
-                    explorerLocation = location;
+                    enterMaze(location).
+                        done(function(data)
+                        {
+                            explorerLocation = location;
+                        });
+                }).fail(function()
+                {
+                    updateLog("startMaze() failed");
                 });
-        }).fail(function()
-        {
-            updateLog("startMaze() failed");
         });
 }
 
@@ -31,7 +35,7 @@ function moveCycle(location)
                             moveExplorer(outcome.location, chosenDirection).
                                 done(function()
                                 {
-                                    updateLog("move complete. Explorer is now at " + JSON.stringify(outcome.location));
+                                    updateLog("move complete");
                                     explorerLocation = outcome.location;
 
                                     if(outcome.exitReached)
