@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class MazeServlet extends HttpServlet
 {
@@ -26,7 +27,7 @@ public class MazeServlet extends HttpServlet
         super.init();
         try
         {
-            loadMaze("one.maze");
+            loadMaze("theonlywayiseast.maze");
         }
         catch (IOException e)
         {
@@ -79,6 +80,7 @@ public class MazeServlet extends HttpServlet
                     return name.endsWith(".maze");
                 }
             });
+            Arrays.sort(mazeFiles);
             response.getWriter().println(GSON.toJson(mazeFiles));
         }
         else
