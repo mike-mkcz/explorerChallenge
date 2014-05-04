@@ -7,6 +7,14 @@ function whichWay(fromLocation, availableDirections)
     });
 }
 
+function getName()
+{
+    return $.getJSON( "explorer/name", function( data )
+    {
+        updateLog("Hi, my name is " + data);
+    });
+}
+
 function enterMaze()
 {
     updateLog("entering maze");

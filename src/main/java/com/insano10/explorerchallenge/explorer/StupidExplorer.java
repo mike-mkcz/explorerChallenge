@@ -11,9 +11,21 @@ public class StupidExplorer implements Explorer
     private static final Logger LOGGER = Logger.getLogger(StupidExplorer.class);
 
     @Override
+    public String getName()
+    {
+        return "Indiana Bones";
+    }
+
+    @Override
     public void enterMaze(Coordinate startLocation)
     {
         LOGGER.info("I'm going in! Starting location: " + startLocation);
+    }
+
+    @Override
+    public void exitMaze()
+    {
+        LOGGER.info("How the hell did I do that?");
     }
 
     @Override
@@ -27,11 +39,5 @@ public class StupidExplorer implements Explorer
     public void move(Coordinate fromLocation, Direction direction)
     {
         LOGGER.info("Guess I'll go a bit further! Moving " + direction + " from " + fromLocation);
-    }
-
-    @Override
-    public void exitMaze()
-    {
-        LOGGER.info("How the hell did I do that?");
     }
 }

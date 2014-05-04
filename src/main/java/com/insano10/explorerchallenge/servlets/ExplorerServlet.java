@@ -28,15 +28,19 @@ public class ExplorerServlet extends HttpServlet
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+
         if (request.getPathInfo().equals("/whichWayNow"))
         {
             Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
             Direction[] availableDirections = GSON.fromJson(request.getParameter("availableDirections"), Direction[].class);
 
             response.getWriter().println(GSON.toJson(explorer.whichWayNow(fromLocation, availableDirections)));
-
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
+        }
+        else if (request.getPathInfo().equals("/name"))
+        {
+            response.getWriter().println(GSON.toJson(explorer.getName()));
         }
         else
         {
