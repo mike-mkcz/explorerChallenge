@@ -60,9 +60,9 @@ public class ExplorerServlet extends HttpServlet
         else if (request.getPathInfo().equals("/move"))
         {
             Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
-            Direction direction = GSON.fromJson(request.getParameter("direction"), Direction.class);
+            Coordinate toLocation = GSON.fromJson(request.getParameter("toLocation"), Coordinate.class);
 
-            explorer.move(fromLocation, direction);
+            explorer.move(fromLocation, toLocation);
         }
         else if (request.getPathInfo().equals("/exitMaze"))
         {

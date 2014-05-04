@@ -32,7 +32,7 @@ function moveCycle(location)
                     attemptMazeMove(location, chosenDirection).
                         done(function(outcome)
                         {
-                            moveExplorer(outcome.location, chosenDirection).
+                            moveExplorer(location, outcome.location).
                                 done(function()
                                 {
                                     updateLog("move complete");

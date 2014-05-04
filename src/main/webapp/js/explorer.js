@@ -24,10 +24,13 @@ function enterMaze(location)
     return $.post( "explorer/enterMaze", {entrance: JSON.stringify(location)});
 }
 
-function moveExplorer(fromLocation, direction)
+function moveExplorer(fromLocation, toLocation)
 {
-    updateLog(explorerName + " is moving " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation));
-    return $.post( "explorer/move", {fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)});
+    updateLog(explorerName + " is moving from " + JSON.stringify(fromLocation) + " to " + JSON.stringify(toLocation));
+    return $.post( "explorer/move", {fromLocation: JSON.stringify(fromLocation), toLocation: JSON.stringify(toLocation)}, function(data)
+    {
+        drawExplorerLocation(fromLocation, toLocation);
+    });
 }
 
 function exitMaze()

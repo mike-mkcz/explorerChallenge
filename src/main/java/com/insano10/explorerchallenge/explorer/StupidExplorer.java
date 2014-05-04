@@ -36,8 +36,8 @@ public class StupidExplorer implements Explorer
     }
 
     @Override
-    public void move(Coordinate fromLocation, Direction direction)
+    public void move(Coordinate fromLocation, Coordinate toLocation)
     {
-        LOGGER.info("Guess I'll go a bit further! Moving " + direction + " from " + fromLocation);
+        LOGGER.info("Guess I'll go a bit further! Moving from " + fromLocation + " to " + toLocation);
     }
 }

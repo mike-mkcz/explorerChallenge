@@ -13,5 +13,5 @@ public interface Explorer
 
     Direction whichWayNow(Coordinate fromLocation, Direction[] availableDirections);
 
-    void move(Coordinate fromLocation, Direction direction);
+    void move(Coordinate fromLocation, Coordinate toLocation);
 }
