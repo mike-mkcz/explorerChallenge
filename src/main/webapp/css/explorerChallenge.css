@@ -15,3 +15,7 @@
 .maze-container {
     margin-left: 50px;
 }
+
+.back-canvas {
+    display: none;
+}

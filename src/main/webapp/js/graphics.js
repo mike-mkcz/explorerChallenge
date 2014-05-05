@@ -7,13 +7,18 @@ var mazeMaxYCoordinate;
 var mazeXOffsetPx;
 var mazeYOffsetPx;
 
+var sprite;
+
 function drawMaze(mazeDefinition)
 {
-    var mazeCanvas = document.getElementById("maze-canvas");
+    var mazeCanvas = document.getElementById("maze-canvas-back");
+    var mazeCanvasOutput = document.getElementById("maze-canvas-front");
 
     //intialise canvas size
     mazeCanvas.width = mazeCanvasWidth;
     mazeCanvas.height = mazeCanvasHeight;
+    mazeCanvasOutput.width = mazeCanvasWidth;
+    mazeCanvasOutput.height = mazeCanvasHeight;
 
     mazeMaxXCoordinate = mazeDefinition.maxXCoordinate;
     mazeMaxYCoordinate = mazeDefinition.maxYCoordinate;
@@ -22,7 +27,12 @@ function drawMaze(mazeDefinition)
     mazeXOffsetPx = (mazeCanvasWidth - mazeWidthPx)/2;
     mazeYOffsetPx = (mazeCanvasHeight - mazeHeightPx)/2;
 
-    var ctx = mazeCanvas.getContext("2d");
+    drawMazeToContext(mazeDefinition, mazeCanvas.getContext("2d"));
+    drawMazeToContext(mazeDefinition, mazeCanvasOutput.getContext("2d"));
+}
+
+function drawMazeToContext(mazeDefinition, ctx)
+{
     ctx.clearRect(0, 0, mazeCanvasWidth, mazeCanvasHeight);
 
     //border
@@ -54,7 +64,7 @@ function drawMaze(mazeDefinition)
 
 function drawExplorerLocation(oldLocation, newLocation)
 {
-    var mazeCanvas = document.getElementById("maze-canvas");
+    var mazeCanvas = document.getElementById("maze-canvas-back");
     var ctx = mazeCanvas.getContext("2d");
 
     ctx.beginPath();
@@ -62,6 +72,11 @@ function drawExplorerLocation(oldLocation, newLocation)
     ctx.moveTo(absoluteXCoordinatePx(oldLocation.x) + mazeSquareSize/2, absoluteYCoordinatePx(oldLocation.y) + mazeSquareSize/2);
     ctx.lineTo(absoluteXCoordinatePx(newLocation.x) + mazeSquareSize/2, absoluteYCoordinatePx(newLocation.y) + mazeSquareSize/2);
     ctx.stroke();
+
+    var outputCanvas = document.getElementById("maze-canvas-front");
+    var outputCtx = outputCanvas.getContext("2d");
+    outputCtx.drawImage(mazeCanvas, 0, 0);
+    outputCtx.drawImage(sprite, absoluteXCoordinatePx(newLocation.x)+3, absoluteYCoordinatePx(newLocation.y));
 }
 
 function absoluteXCoordinatePx(xGridPos)
@@ -74,4 +89,10 @@ function absoluteYCoordinatePx(yGridPos)
     //y origin is reversed from grid to canvas
     var yPosition = (mazeMaxYCoordinate-yGridPos);
     return mazeYOffsetPx + yPosition*mazeSquareSize
+}
+
+function loadExplorerSprite()
+{
+    sprite = new Image();
+    sprite.src = "../images/explorer.png";
 }
