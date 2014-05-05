@@ -7,7 +7,9 @@ var mazeMaxYCoordinate;
 var mazeXOffsetPx;
 var mazeYOffsetPx;
 
-var sprite;
+var explorerSprite;
+var wallSprite;
+var pathSprite;
 
 function drawMaze(mazeDefinition)
 {
@@ -47,17 +49,12 @@ function drawMazeToContext(mazeDefinition, ctx)
         {
             if(mazeDefinition.grid[x][y])
             {
-                ctx.fillStyle = "#FFFFFF";
+                ctx.drawImage(pathSprite, absoluteXCoordinatePx(x), absoluteYCoordinatePx(y));
             }
             else
             {
-                ctx.fillStyle = "#000000";
+                ctx.drawImage(wallSprite, absoluteXCoordinatePx(x), absoluteYCoordinatePx(y));
             }
-
-            ctx.beginPath();
-            ctx.strokeRect(absoluteXCoordinatePx(x), absoluteYCoordinatePx(y), mazeSquareSize, mazeSquareSize);
-            ctx.fillRect(absoluteXCoordinatePx(x), absoluteYCoordinatePx(y), mazeSquareSize, mazeSquareSize);
-            ctx.stroke();
         }
     }
 }
@@ -76,7 +73,7 @@ function drawExplorerLocation(oldLocation, newLocation)
     var outputCanvas = document.getElementById("maze-canvas-front");
     var outputCtx = outputCanvas.getContext("2d");
     outputCtx.drawImage(mazeCanvas, 0, 0);
-    outputCtx.drawImage(sprite, absoluteXCoordinatePx(newLocation.x)+3, absoluteYCoordinatePx(newLocation.y));
+    outputCtx.drawImage(explorerSprite, absoluteXCoordinatePx(newLocation.x)+3, absoluteYCoordinatePx(newLocation.y));
 }
 
 function absoluteXCoordinatePx(xGridPos)
@@ -93,6 +90,12 @@ function absoluteYCoordinatePx(yGridPos)
 
 function loadExplorerSprite()
 {
-    sprite = new Image();
-    sprite.src = "../images/explorer.png";
+    explorerSprite = new Image();
+    explorerSprite.src = "../images/explorer.png";
+
+    wallSprite = new Image();
+    wallSprite.src = "../images/wall.png";
+
+    pathSprite = new Image();
+    pathSprite.src = "../images/path.png";
 }
