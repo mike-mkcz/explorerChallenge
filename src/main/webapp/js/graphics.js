@@ -10,6 +10,7 @@ var mazeYOffsetPx;
 var explorerSprite;
 var wallSprite;
 var pathSprite;
+var exitSprite;
 
 function drawMaze(mazeDefinition)
 {
@@ -57,6 +58,9 @@ function drawMazeToContext(mazeDefinition, ctx)
             }
         }
     }
+
+    //exit
+    ctx.drawImage(exitSprite, absoluteXCoordinatePx(mazeDefinition.exit.x), absoluteYCoordinatePx(mazeDefinition.exit.y))
 }
 
 function drawExplorerLocation(oldLocation, newLocation)
@@ -98,4 +102,7 @@ function loadExplorerSprite()
 
     pathSprite = new Image();
     pathSprite.src = "../images/path.png";
+
+    exitSprite = new Image();
+    exitSprite.src = "../images/exit.png";
 }
