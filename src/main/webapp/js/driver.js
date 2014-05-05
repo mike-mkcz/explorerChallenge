@@ -13,6 +13,7 @@ function startMaze()
                         done(function(data)
                         {
                             explorerLocation = location;
+                            drawExplorerLocation(location, location);
                         });
                 }).fail(function()
                 {
