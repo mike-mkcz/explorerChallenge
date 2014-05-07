@@ -1,0 +1,10 @@
+width=5
+missing
+entrance=0,3
+exit=3,0
+#maze
+!00000
+!11000
+!01000
+!01110
+!00010

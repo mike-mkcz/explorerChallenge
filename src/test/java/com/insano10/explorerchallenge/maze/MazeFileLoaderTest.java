@@ -1,13 +1,18 @@
 package com.insano10.explorerchallenge.maze;
 
 import com.insano10.explorerchallenge.maze.utils.TestMazes;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.unitils.reflectionassert.ReflectionAssert;
 
 import java.io.File;
 
 public class MazeFileLoaderTest
 {
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     private MazeFileLoader fileLoader = new MazeFileLoader();
 
     @Test
@@ -32,17 +37,90 @@ public class MazeFileLoaderTest
         ReflectionAssert.assertReflectionEquals(expectedMaze, maze);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void shouldNotLoadMazeFileMissingInformation() throws Exception
+    @Test
+    public void firstLineMustBeWidth() throws Exception
     {
-        File mazeFile = new File("src/test/resources/mazes/missingField.maze");
+        assertRuntimeException("Invalid width specified on line 1");
+        
+        File mazeFile = new File("src/test/resources/mazes/badWidth.maze");
         fileLoader.loadFromFile(mazeFile);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void shouldNotLoadMazeFileWithIncompleteGrid() throws Exception
+    @Test
+    public void secondLineMustBeHeight() throws Exception
     {
-        File mazeFile = new File("src/test/resources/mazes/invalidGrid.maze");
+        assertRuntimeException("Invalid height specified on line 2");
+
+        File mazeFile = new File("src/test/resources/mazes/badHeight.maze");
         fileLoader.loadFromFile(mazeFile);
+    }
+
+    @Test
+    public void thirdLineMustBeEntrance() throws Exception
+    {
+        assertRuntimeException("Invalid entrance specified on line 3");
+
+        File mazeFile = new File("src/test/resources/mazes/badEntrance.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
+    @Test
+    public void fourthLineMustBeExit() throws Exception
+    {
+        assertRuntimeException("Invalid exit specified on line 4");
+
+        File mazeFile = new File("src/test/resources/mazes/badExit.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
+    @Test
+    public void shouldNotLoadMazeFileWithGridThatIsNotTheSpecifiedWidth() throws Exception
+    {
+        assertRuntimeException("Gridline 3 is not of width 5");
+
+        File mazeFile = new File("src/test/resources/mazes/badGridWidth.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
+    @Test
+    public void shouldNotLoadMazeFileWithGridThatIsNotTheSpecifiedHeight() throws Exception
+    {
+        assertRuntimeException("Defined grid should be height 5");
+
+        File mazeFile = new File("src/test/resources/mazes/badGridHeight.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
+    @Test
+    public void shouldNotLoadMazeFileWithGridContainingInvalidSymbol() throws Exception
+    {
+        assertRuntimeException("Grid contains invalid character: A");
+
+        File mazeFile = new File("src/test/resources/mazes/badGridSymbol.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
+    @Test
+    public void shouldNotLoadMazeFileWhereEntranceIsNotWithinTheBoundsOfTheMaze() throws Exception
+    {
+        assertRuntimeException("Entrance is not within the maze");
+
+        File mazeFile = new File("src/test/resources/mazes/badGridEntranceCoords.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
+    @Test
+    public void shouldNotLoadMazeFileWhereExitIsNotWithinTheBoundsOfTheMaze() throws Exception
+    {
+        assertRuntimeException("Exit is not within the maze");
+
+        File mazeFile = new File("src/test/resources/mazes/badGridExitCoords.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
+    private void assertRuntimeException(String message)
+    {
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage(message);
     }
 }

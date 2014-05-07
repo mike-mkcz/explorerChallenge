@@ -18,6 +18,16 @@ public class Maze
         this.exit = exit;
         this.maxXCoordinate = grid.length - 1;
         this.maxYCoordinate = grid[0].length - 1;
+
+        if(!coordinateIsWithinMaze(entrance))
+        {
+            throw new RuntimeException("Entrance is not within the maze");
+        }
+
+        if(!coordinateIsWithinMaze(exit))
+        {
+            throw new RuntimeException("Exit is not within the maze");
+        }
     }
 
     public Coordinate move(Coordinate fromLocation, Direction direction) throws InvalidMoveException

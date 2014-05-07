@@ -2,91 +2,124 @@ package com.insano10.explorerchallenge.maze;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MazeFileLoader
 {
     public Maze loadFromFile(File file) throws IOException
     {
-        int width = -1;
-        int height = -1;
-        Coordinate entrance = null;
-        Coordinate exit = null;
-        boolean[][] grid = null;
+        int width;
+        int height;
+        Coordinate entrance;
+        Coordinate exit;
+        boolean[][] grid;
 
         int gridLinesScanned = 0;
-        int expectedDefinedSquares = 0;
-        int actualDefinedSquares = 0;
+
+        List<String> lines = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(file))
         {
-
             while(scanner.hasNextLine())
             {
-                String line = scanner.nextLine();
+                lines.add(scanner.nextLine());
+            }
 
-                if(line.startsWith("width"))
+            width = getIntValueFromLines(lines, 0, "width");
+            height = getIntValueFromLines(lines, 1, "height");
+            entrance = getCoordinateValueFromLines(lines, 2, "entrance");
+            exit = getCoordinateValueFromLines(lines, 3, "exit");
+
+            grid = new boolean[width][height];
+
+            for(String line : lines.subList(4, lines.size()))
+            {
+                if(line.startsWith("!"))
                 {
-                    width = Integer.parseInt(line.split("=")[1]);
-                }
-                else if(line.startsWith("height"))
-                {
-                    height = Integer.parseInt(line.split("=")[1]);
-                }
-                else if(line.startsWith("entrance"))
-                {
-                    entrance = getCoordinateFromString(line.split("=")[1]);
-                }
-                else if(line.startsWith("exit"))
-                {
-                    exit = getCoordinateFromString(line.split("=")[1]);
-                }
-                else if(line.equals("#maze"))
-                {
-                    validate(entrance, exit, width, height, file.getAbsolutePath());
-                    expectedDefinedSquares = width * height;
-                    grid = new boolean[width][height];
-                }
-                else if(line.startsWith("!"))
-                {
+                    if(gridLinesScanned >= height)
+                    {
+                        throw new RuntimeException("Defined grid should be height " + height);
+                    }
+
                     int currentYCoordinate = height - gridLinesScanned - 1;
                     char[] squares = line.replace("!", "").toCharArray();
+
+                    if(squares.length != width)
+                    {
+                        throw new RuntimeException("Gridline " + (gridLinesScanned+1) + " is not of width " + width);
+                    }
 
                     for(int i=0 ; i<squares.length ; i++)
                     {
                         grid[i][currentYCoordinate] = canMoveThroughGridSquare(squares[i]);
-                        actualDefinedSquares++;
                     }
 
                     gridLinesScanned++;
                 }
             }
 
-            if(expectedDefinedSquares != actualDefinedSquares)
+            if(gridLinesScanned != height)
             {
-                throw new RuntimeException("invalid maze file: " + file.getAbsolutePath());
+                throw new RuntimeException("Defined grid should be height " + height);
             }
 
             return new Maze(grid, entrance, exit);
         }
     }
 
-    private void validate(Coordinate entrance, Coordinate exit, int width, int height, String filePath)
+    private int getIntValueFromLines(List<String> lines, int indexOfValue, String valueId)
     {
-        if(entrance == null || exit == null || width == -1 || height == -1)
+        try
         {
-            throw new RuntimeException("invalid maze file: " + filePath);
+            String line = lines.get(indexOfValue);
+            String[] tokens = line.split("=");
+
+            if(tokens[0].equals(valueId))
+            {
+                return Integer.parseInt(tokens[1]);
+            }
         }
+        catch(Exception e)
+        {
+            //continue to exception
+        }
+        throw new RuntimeException("Invalid " + valueId + " specified on line " + (indexOfValue+1));
     }
 
-    private Coordinate getCoordinateFromString(String str)
+    private Coordinate getCoordinateValueFromLines(List<String> lines, int indexOfValue, String valueId)
     {
-        String[] coordinates = str.split(",");
-        return Coordinate.create(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
+        try
+        {
+            String line = lines.get(indexOfValue);
+            String[] tokens = line.split("=");
+            if(tokens[0].equals(valueId))
+            {
+                String[] coordinates = tokens[1].split(",");
+                return Coordinate.create(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
+            }
+        }
+        catch(Exception e)
+        {
+            //continue to exception
+        }
+        throw new RuntimeException("Invalid " + valueId + " specified on line " + (indexOfValue+1));
     }
 
     private boolean canMoveThroughGridSquare(char c)
     {
-        return c == '1';
+        if(c == '1')
+        {
+            return true;
+        }
+        else if(c == '0')
+        {
+            return false;
+        }
+        else
+        {
+            throw new RuntimeException("Grid contains invalid character: " + c);
+        }
     }
 }
