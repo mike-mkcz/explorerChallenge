@@ -63,6 +63,7 @@ function setMaze(mazeName)
     $.post( "maze/maze", {file: mazeName}, function(mazeDefinition)
     {
         $(".current-maze").val("Current maze: " + mazeName);
+        $(".traversalButton").attr("disabled", "disabled");
         drawMaze($.parseJSON(mazeDefinition));
     });
 }

@@ -13,6 +13,8 @@ function startMaze()
                         done(function(data)
                         {
                             explorerLocation = location;
+
+                            startMazeTraversal();
                             drawExplorerLocation(location, location);
                         });
                 }).fail(function()
@@ -42,6 +44,7 @@ function moveCycle(location)
                                     {
                                         updateLog("Exit reached!");
                                         exitMaze();
+                                        endMazeTraversal();
                                     }
                                     updateLog("-------------------------");
                                 });
@@ -56,4 +59,15 @@ function moveCycle(location)
     {
         updateLog("moveCycle() failed: " + location);
     });
+}
+
+function startMazeTraversal()
+{
+    $(".traversalButton").removeAttr("disabled");
+    redrawCurrentMaze();
+}
+
+function endMazeTraversal()
+{
+    $(".traversalButton").attr("disabled", "disabled");
 }

@@ -2,6 +2,7 @@ var mazeCanvasWidth = 1000;
 var mazeCanvasHeight = 800;
 var mazeSquareSize = 20;
 
+var currentMazeDefinition;
 var mazeMaxXCoordinate;
 var mazeMaxYCoordinate;
 var mazeXOffsetPx;
@@ -12,8 +13,14 @@ var wallSprite;
 var pathSprite;
 var exitSprite;
 
+function redrawCurrentMaze()
+{
+    drawMaze(currentMazeDefinition);
+}
+
 function drawMaze(mazeDefinition)
 {
+    currentMazeDefinition = mazeDefinition;
     var mazeCanvas = document.getElementById("maze-canvas-back");
     var mazeCanvasOutput = document.getElementById("maze-canvas-front");
 
@@ -92,7 +99,7 @@ function absoluteYCoordinatePx(yGridPos)
     return mazeYOffsetPx + yPosition*mazeSquareSize
 }
 
-function loadExplorerSprite()
+function loadSprites()
 {
     explorerSprite = new Image();
     explorerSprite.src = "../images/explorer.png";
