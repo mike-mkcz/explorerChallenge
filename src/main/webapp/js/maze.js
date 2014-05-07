@@ -1,11 +1,13 @@
 function attemptMazeMove(fromLocation, direction)
 {
     updateLog("Can I move " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation) + "?");
-    return $.getJSON( "maze/move", {fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)}, function( data )
+    return $.post( "maze/move", {fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)}, function( outcome )
     {
-        updateLog("Valid move!, New location is [" + data.location.x + "," + data.location.y + "]");
+        var outcomeJson = $.parseJSON(outcome);
 
-        if(data.exit)
+        updateLog("Valid move!, New location is [" + outcomeJson.location.x + "," + outcomeJson.location.y + "]");
+
+        if(outcomeJson.exit)
         {
             updateLog("exit reached");
         }

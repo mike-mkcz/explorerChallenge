@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.insano10.explorerchallenge.explorer.Explorer;
 import com.insano10.explorerchallenge.explorer.LeftHandWallExplorer;
-import com.insano10.explorerchallenge.explorer.StupidExplorer;
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
 
@@ -27,6 +26,7 @@ public class ExplorerServlet extends HttpServlet
         explorer = new LeftHandWallExplorer();
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setContentType("application/json");
@@ -34,14 +34,11 @@ public class ExplorerServlet extends HttpServlet
 
         if (request.getPathInfo().equals("/whichWayNow"))
         {
-            Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
-            Direction[] availableDirections = GSON.fromJson(request.getParameter("availableDirections"), Direction[].class);
-
-            response.getWriter().println(GSON.toJson(explorer.whichWayNow(fromLocation, availableDirections)));
+            whichWay(request, response);
         }
         else if (request.getPathInfo().equals("/name"))
         {
-            response.getWriter().println(GSON.toJson(explorer.getName()));
+            getName(response);
         }
         else
         {
@@ -54,24 +51,51 @@ public class ExplorerServlet extends HttpServlet
     {
         if (request.getPathInfo().equals("/enterMaze"))
         {
-            Coordinate entrance = GSON.fromJson(request.getParameter("entrance"), Coordinate.class);
-
-            explorer.enterMaze(entrance);
+            enterMaze(request);
         }
         else if (request.getPathInfo().equals("/move"))
         {
-            Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
-            Coordinate toLocation = GSON.fromJson(request.getParameter("toLocation"), Coordinate.class);
-
-            explorer.move(fromLocation, toLocation);
+            doMove(request);
         }
         else if (request.getPathInfo().equals("/exitMaze"))
         {
-            explorer.exitMaze();
+            exitMaze();
         }
         else
         {
             throw new RuntimeException("Unknown post: " + request.getPathInfo());
         }
+    }
+
+    private void whichWay(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
+        Direction[] availableDirections = GSON.fromJson(request.getParameter("availableDirections"), Direction[].class);
+
+        response.getWriter().println(GSON.toJson(explorer.whichWayNow(fromLocation, availableDirections)));
+    }
+
+    private void getName(HttpServletResponse response) throws IOException
+    {
+        response.getWriter().println(GSON.toJson(explorer.getName()));
+    }
+
+    private void enterMaze(HttpServletRequest request)
+    {
+        Coordinate entrance = GSON.fromJson(request.getParameter("entrance"), Coordinate.class);
+        explorer.enterMaze(entrance);
+    }
+
+    private void doMove(HttpServletRequest request)
+    {
+        Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
+        Coordinate toLocation = GSON.fromJson(request.getParameter("toLocation"), Coordinate.class);
+
+        explorer.move(fromLocation, toLocation);
+    }
+
+    private void exitMaze()
+    {
+        explorer.exitMaze();
     }
 }

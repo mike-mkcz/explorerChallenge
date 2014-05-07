@@ -21,53 +21,23 @@ public class MazeServlet extends HttpServlet
     private MazeFileLoader mazeLoader = new MazeFileLoader();
     private Maze maze;
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
 
-        if (request.getPathInfo().equals("/move"))
+        if (request.getPathInfo().equals("/entrance"))
         {
-            Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
-            Direction direction = GSON.fromJson(request.getParameter("direction"), Direction.class);
-
-            try
-            {
-                Coordinate newLocation = maze.move(fromLocation, direction);
-                boolean exitReached = maze.isExit(newLocation);
-
-                MoveOutcome moveOutcome = new MoveOutcome(newLocation, exitReached);
-
-                response.getWriter().println(GSON.toJson(moveOutcome));
-
-            } catch (InvalidMoveException e)
-            {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Going " + direction + " from " + fromLocation + " is not a valid move");
-            }
-        }
-        else if (request.getPathInfo().equals("/entrance"))
-        {
-            response.getWriter().println(GSON.toJson(maze.getEntrance()));
+            getEntrance(response);
         }
         else if (request.getPathInfo().equals("/exits"))
         {
-            Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
-
-            response.getWriter().println(GSON.toJson(maze.getExitsFrom(fromLocation)));
+            getExitsFromLocation(request, response);
         }
         else if (request.getPathInfo().equals("/mazes"))
         {
-            File mapFolder = new File(MAP_ROOT);
-            String[] mazeFiles = mapFolder.list(new FilenameFilter()
-            {
-                @Override
-                public boolean accept(File dir, String name)
-                {
-                    return name.endsWith(".maze");
-                }
-            });
-            Arrays.sort(mazeFiles);
-            response.getWriter().println(GSON.toJson(mazeFiles));
+            getMazes(response);
         }
         else
         {
@@ -80,13 +50,68 @@ public class MazeServlet extends HttpServlet
     {
         if (request.getPathInfo().equals("/maze"))
         {
-            maze = loadMaze(request.getParameter("file"));
-            response.getWriter().println(GSON.toJson(maze));
+            setMaze(request, response);
         }
-       else
+        else if (request.getPathInfo().equals("/move"))
+        {
+            attemptMove(request, response);
+        }
+        else
         {
             throw new RuntimeException("Unknown post: " + request.getPathInfo());
         }
+    }
+
+    private void getMazes(HttpServletResponse response) throws IOException
+    {
+        File mapFolder = new File(MAP_ROOT);
+        String[] mazeFiles = mapFolder.list(new FilenameFilter()
+        {
+            @Override
+            public boolean accept(File dir, String name)
+            {
+                return name.endsWith(".maze");
+            }
+        });
+        Arrays.sort(mazeFiles);
+        response.getWriter().println(GSON.toJson(mazeFiles));
+    }
+
+    private void getExitsFromLocation(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
+        response.getWriter().println(GSON.toJson(maze.getExitsFrom(fromLocation)));
+    }
+
+    private void getEntrance(HttpServletResponse response) throws IOException
+    {
+        response.getWriter().println(GSON.toJson(maze.getEntrance()));
+    }
+
+    private void attemptMove(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
+        Direction direction = GSON.fromJson(request.getParameter("direction"), Direction.class);
+
+        try
+        {
+            Coordinate newLocation = maze.move(fromLocation, direction);
+            boolean exitReached = maze.isExit(newLocation);
+
+            MoveOutcome moveOutcome = new MoveOutcome(newLocation, exitReached);
+
+            response.getWriter().println(GSON.toJson(moveOutcome));
+
+        } catch (InvalidMoveException e)
+        {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Going " + direction + " from " + fromLocation + " is not a valid move");
+        }
+    }
+
+    private void setMaze(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        maze = loadMaze(request.getParameter("file"));
+        response.getWriter().println(GSON.toJson(maze));
     }
 
     private Maze loadMaze(String fileName) throws IOException

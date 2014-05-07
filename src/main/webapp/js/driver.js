@@ -35,12 +35,14 @@ function moveCycle(location)
                     attemptMazeMove(location, chosenDirection).
                         done(function(outcome)
                         {
-                            moveExplorer(location, outcome.location).
+                            var outcomeJSON = $.parseJSON(outcome);
+
+                            moveExplorer(location, outcomeJSON.location).
                                 done(function()
                                 {
-                                    explorerLocation = outcome.location;
+                                    explorerLocation = outcomeJSON.location;
 
-                                    if(outcome.exitReached)
+                                    if(outcomeJSON.exitReached)
                                     {
                                         updateLog("Exit reached!");
                                         exitMaze();
