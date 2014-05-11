@@ -1,40 +1,44 @@
-var explorerName;
 
-function whichWay(fromLocation, availableDirections)
+function Explorer()
 {
-    updateLog(explorerName + ": which way shall I go?");
+}
+
+Explorer.prototype.explorerName = '';
+
+Explorer.prototype.whichWay = function whichWay(fromLocation, availableDirections)
+{
+    updateLog(this.explorerName + ": which way shall I go?");
     return $.getJSON( "explorer/whichWayNow", {fromLocation: JSON.stringify(fromLocation), availableDirections:JSON.stringify(availableDirections)}, function( data )
     {
         updateLog("choosing to go " + data);
     });
-}
+};
 
-function getName()
+Explorer.prototype.getName = function getName()
 {
+    var thisExplorer = this;
     return $.getJSON( "explorer/name", function( name )
     {
         updateLog("Explorer entering the maze is " + name);
-        explorerName = name;
+        thisExplorer.explorerName = name;
     });
-}
+};
 
-function enterMaze(location)
+Explorer.prototype.enterMaze = function enterMaze(location)
 {
-    updateLog(explorerName + " is entering the maze");
+    updateLog(this.explorerName + " is entering the maze");
     return $.post( "explorer/enterMaze", {entrance: JSON.stringify(location)});
-}
+};
 
-function moveExplorer(fromLocation, toLocation)
+Explorer.prototype.moveExplorer = function moveExplorer(fromLocation, toLocation)
 {
-    updateLog(explorerName + " is moving from " + JSON.stringify(fromLocation) + " to " + JSON.stringify(toLocation));
-    return $.post( "explorer/move", {fromLocation: JSON.stringify(fromLocation), toLocation: JSON.stringify(toLocation)}, function(data)
-    {
-        drawExplorerLocation(fromLocation, toLocation);
-    });
-}
+    var thisExplorer = this;
+    updateLog(this.explorerName + " is moving from " + JSON.stringify(fromLocation) + " to " + JSON.stringify(toLocation));
+    return $.post( "explorer/move", {fromLocation: JSON.stringify(fromLocation), toLocation: JSON.stringify(toLocation)});
+};
 
-function exitMaze()
+Explorer.prototype.exitMaze = function exitMaze()
 {
-    updateLog(explorerName + " is exiting the maze");
+    updateLog(this.explorerName + " is exiting the maze");
     $.post( "explorer/exitMaze");
-}
+};

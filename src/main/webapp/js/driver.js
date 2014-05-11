@@ -1,75 +1,120 @@
-var explorerLocation;
 
-
-function startMaze()
+function Driver(explorer, graphics, maze)
 {
-    getName().
+    this.explorer = explorer;
+    this.graphics = graphics;
+    this.maze = maze;
+}
+
+Driver.prototype.explorer = null;
+Driver.prototype.graphics = null;
+Driver.prototype.maze = null;
+Driver.prototype.explorerLocation = null;
+
+Driver.prototype.load = function load()
+{
+    var thisDriver = this;
+    this.graphics.loadSprites();
+    initialiseLog();
+    this.maze.getMazes().
+        done(function(data)
+        {
+            thisDriver.maze.setDefaultMaze().
+                    done(function(mazeDefinition)
+                    {
+                        thisDriver.drawAndStartMaze(mazeDefinition);
+                    });
+        });
+};
+
+Driver.prototype.setMaze = function setMaze(mazeName)
+{
+    var thisDriver = this;
+    this.maze.setMaze(mazeName).
+        done(function(mazeDefinition)
+        {
+            thisDriver.drawAndStartMaze(mazeDefinition);
+        });
+};
+
+Driver.prototype.drawAndStartMaze = function(mazeDefinitionJSON)
+{
+    this.graphics.drawMaze($.parseJSON(mazeDefinitionJSON));
+    this.startMaze();
+};
+
+Driver.prototype.startMaze = function startMaze()
+{
+    var thisDriver = this;
+    this.explorer.getName().
         done(function(name)
         {
-            getEntrance().
+            thisDriver.maze.getEntrance().
                 done(function(location)
                 {
-                    enterMaze(location).
+                    thisDriver.explorer.enterMaze(location).
                         done(function(data)
                         {
-                            explorerLocation = location;
+                            thisDriver.explorerLocation = location;
 
-                            startMazeTraversal();
-                            drawExplorerLocation(location, location);
+                            thisDriver.startMazeTraversal();
+                            thisDriver.graphics.drawExplorerLocation(location, location);
                         });
                 }).fail(function()
                 {
                     updateLog("startMaze() failed");
                 });
         });
-}
+};
 
-function moveCycle(location)
+Driver.prototype.moveCycle = function moveCycle()
 {
-    getAvailableExits(location).
+    var thisDriver = this;
+    this.maze.getAvailableExits(this.explorerLocation).
         done(function(exits)
         {
-            whichWay(location, exits).
+            thisDriver.explorer.whichWay(thisDriver.explorerLocation, exits).
                 done(function(chosenDirection)
                 {
-                    attemptMazeMove(location, chosenDirection).
-                        done(function(outcome)
+                    thisDriver.maze.attemptMazeMove(thisDriver.explorerLocation, chosenDirection).
+                        done(function(outcomeJSON)
                         {
-                            var outcomeJSON = $.parseJSON(outcome);
+                            var outcome = $.parseJSON(outcomeJSON);
 
-                            moveExplorer(location, outcomeJSON.location).
+                            thisDriver.explorer.moveExplorer(thisDriver.explorerLocation, outcome.location).
                                 done(function()
                                 {
-                                    explorerLocation = outcomeJSON.location;
+                                    thisDriver.graphics.drawExplorerLocation(thisDriver.explorerLocation, outcome.location);
+                                    thisDriver.explorerLocation = outcome.location;
 
-                                    if(outcomeJSON.exitReached)
+                                    if(outcome.exitReached)
                                     {
                                         updateLog("Exit reached!");
-                                        exitMaze();
-                                        endMazeTraversal();
+                                        thisDriver.explorer.exitMaze();
+                                        thisDriver.endMazeTraversal();
                                     }
                                     updateLog("-------------------------");
                                 });
                         }).error(function(outcome)
                         {
-                            updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(location));
+                            updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(thisDriver.explorerLocation));
                             updateLog("-------------------------");
                         });
                 });
 
     }).fail(function()
     {
-        updateLog("moveCycle() failed: " + location);
+        updateLog("moveCycle() failed: " + thisDriver.explorerLocation);
     });
-}
+};
 
-function startMazeTraversal()
+Driver.prototype.startMazeTraversal = function startMazeTraversal()
 {
     $(".traversalButton").removeAttr("disabled");
-    redrawCurrentMaze();
-}
+    this.graphics.redrawCurrentMaze();
+};
 
-function endMazeTraversal()
+Driver.prototype.endMazeTraversal = function endMazeTraversal()
 {
     $(".traversalButton").attr("disabled", "disabled");
-}
+};

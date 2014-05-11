@@ -13,11 +13,11 @@
         <script src="../lib/jscrollpane/js/mwheelIntent.js"></script>
         <script src="../lib/jscrollpane/js/jquery.jscrollpane.min.js"></script>
         <script src="../js/log.js"></script>
-        <script src="../js/onload.js"></script>
         <script src="../js/explorer.js"></script>
         <script src="../js/maze.js"></script>
         <script src="../js/graphics.js"></script>
         <script src="../js/driver.js"></script>
+        <script src="../js/onload.js"></script>
     </head>
     <body>
 
@@ -32,8 +32,8 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <a class="btn btn-success" role="button" onclick="startMaze()">Restart Maze</a>
-                <a class="btn btn-success traversalButton" role="button" onclick="moveCycle(explorerLocation)">Move Cycle</a>
+                <a class="btn btn-success" role="button" onclick="driver.startMaze()">Restart Maze</a>
+                <a class="btn btn-success traversalButton" role="button" onclick="driver.moveCycle()">Move Cycle</a>
             </div>
         </div>
         <div class="row">

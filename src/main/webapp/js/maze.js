@@ -1,4 +1,10 @@
-function attemptMazeMove(fromLocation, direction)
+
+function Maze()
+{
+}
+
+
+Maze.prototype.attemptMazeMove = function attemptMazeMove(fromLocation, direction)
 {
     updateLog("Can I move " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation) + "?");
     return $.post( "maze/move", {fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)}, function( outcome )
@@ -12,33 +18,34 @@ function attemptMazeMove(fromLocation, direction)
             updateLog("exit reached");
         }
     });
-}
+};
 
-function getEntrance()
+Maze.prototype.getEntrance = function getEntrance()
 {
     updateLog("Finding entrance...");
     return $.getJSON( "maze/entrance", function( data )
     {
         updateLog("entrance is at [" + data.x + "," + data.y + "]");
     });
-}
+};
 
-function getAvailableExits(location)
+Maze.prototype.getAvailableExits = function getAvailableExits(location)
 {
     updateLog("What exits are available from " + JSON.stringify(location) + "?");
     return $.getJSON( "maze/exits", {fromLocation: JSON.stringify(location)}, function( data )
     {
-        exitString = "";
+        var exitString = "";
         $.each(data, function( index, value ) {
             exitString += value + " ";
         });
         updateLog("exits available [" +exitString + "]");
 
     });
-}
+};
 
-function getMazes()
+Maze.prototype.getMazes = function getMazes()
 {
+    var thisMaze = this;
     return $.getJSON( "maze/mazes", function(data)
     {
         $('.maze-list').empty();
@@ -50,29 +57,27 @@ function getMazes()
                     html: $('<a/>', {
                         href: '#',
                         text: value,
-                        onclick: 'setMaze("' + value + '")'
+                        onclick: 'driver.setMaze("' + value + '")'
                     })
                 })
             );
         });
-        setDefaultMaze();
     });
-}
+};
 
-function setMaze(mazeName)
+Maze.prototype.setMaze = function setMaze(mazeName)
 {
+    var thisMaze = this;
     updateLog("loading maze " + mazeName);
-    $.post( "maze/maze", {file: mazeName}, function(mazeDefinition)
+    return $.post( "maze/maze", {file: mazeName}, function(mazeDefinition)
     {
         $(".current-maze").val("Current maze: " + mazeName);
         $(".traversalButton").attr("disabled", "disabled");
-        drawMaze($.parseJSON(mazeDefinition));
-        startMaze();
     });
-}
+};
 
-function setDefaultMaze()
+Maze.prototype.setDefaultMaze = function setDefaultMaze()
 {
     var firstMazeInList = $(".maze-list-item").first().find("a").text();
-    setMaze(firstMazeInList);
-}
+    return this.setMaze(firstMazeInList);
+};
