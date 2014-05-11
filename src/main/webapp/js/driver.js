@@ -1,120 +1,118 @@
-
-function Driver(explorer, graphics, maze)
+function Driver(theExplorer, theGraphics, theMaze)
 {
-    this.explorer = explorer;
-    this.graphics = graphics;
-    this.maze = maze;
-}
+    /*
+        PRIVATE
+     */
 
-Driver.prototype.explorer = null;
-Driver.prototype.graphics = null;
-Driver.prototype.maze = null;
-Driver.prototype.explorerLocation = null;
+    var explorer = theExplorer;
+    var graphics = theGraphics;
+    var maze = theMaze;
+    var explorerLocation = null;
 
-Driver.prototype.load = function load()
-{
-    var thisDriver = this;
-    this.graphics.loadSprites();
-    initialiseLog();
-    this.maze.getMazes().
-        done(function(data)
-        {
-            thisDriver.maze.setDefaultMaze().
+    var startMazeTraversal = function startMazeTraversal()
+    {
+        $(".traversalButton").removeAttr("disabled");
+        graphics.redrawCurrentMaze();
+    };
+
+    var endMazeTraversal = function endMazeTraversal()
+    {
+        $(".traversalButton").attr("disabled", "disabled");
+    };
+
+    /*
+        PRIVILEGED
+     */
+
+    this.load = function load()
+    {
+        var thisDriver = this;
+        graphics.loadSprites();
+        initialiseLog();
+        maze.getMazes().
+            done(function(data)
+            {
+                maze.setDefaultMaze().
                     done(function(mazeDefinition)
                     {
-                        thisDriver.drawAndStartMaze(mazeDefinition);
+                        graphics.drawMaze($.parseJSON(mazeDefinition));
+                        thisDriver.startMaze();
                     });
-        });
-};
+            });
+    };
 
-Driver.prototype.setMaze = function setMaze(mazeName)
-{
-    var thisDriver = this;
-    this.maze.setMaze(mazeName).
-        done(function(mazeDefinition)
-        {
-            thisDriver.drawAndStartMaze(mazeDefinition);
-        });
-};
-
-Driver.prototype.drawAndStartMaze = function(mazeDefinitionJSON)
-{
-    this.graphics.drawMaze($.parseJSON(mazeDefinitionJSON));
-    this.startMaze();
-};
-
-Driver.prototype.startMaze = function startMaze()
-{
-    var thisDriver = this;
-    this.explorer.getName().
-        done(function(name)
-        {
-            thisDriver.maze.getEntrance().
-                done(function(location)
-                {
-                    thisDriver.explorer.enterMaze(location).
-                        done(function(data)
-                        {
-                            thisDriver.explorerLocation = location;
-
-                            thisDriver.startMazeTraversal();
-                            thisDriver.graphics.drawExplorerLocation(location, location);
-                        });
-                }).fail(function()
-                {
-                    updateLog("startMaze() failed");
-                });
-        });
-};
-
-Driver.prototype.moveCycle = function moveCycle()
-{
-    var thisDriver = this;
-    this.maze.getAvailableExits(this.explorerLocation).
-        done(function(exits)
-        {
-            thisDriver.explorer.whichWay(thisDriver.explorerLocation, exits).
-                done(function(chosenDirection)
-                {
-                    thisDriver.maze.attemptMazeMove(thisDriver.explorerLocation, chosenDirection).
-                        done(function(outcomeJSON)
-                        {
-                            var outcome = $.parseJSON(outcomeJSON);
-
-                            thisDriver.explorer.moveExplorer(thisDriver.explorerLocation, outcome.location).
-                                done(function()
-                                {
-                                    thisDriver.graphics.drawExplorerLocation(thisDriver.explorerLocation, outcome.location);
-                                    thisDriver.explorerLocation = outcome.location;
-
-                                    if(outcome.exitReached)
-                                    {
-                                        updateLog("Exit reached!");
-                                        thisDriver.explorer.exitMaze();
-                                        thisDriver.endMazeTraversal();
-                                    }
-                                    updateLog("-------------------------");
-                                });
-                        }).error(function(outcome)
-                        {
-                            updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(thisDriver.explorerLocation));
-                            updateLog("-------------------------");
-                        });
-                });
-
-    }).fail(function()
+    this.setMaze = function setMaze(mazeName)
     {
-        updateLog("moveCycle() failed: " + thisDriver.explorerLocation);
-    });
-};
+        var thisDriver = this;
+        maze.setMaze(mazeName).
+            done(function(mazeDefinition)
+            {
+                graphics.drawMaze($.parseJSON(mazeDefinition));
+                thisDriver.startMaze();
+            });
+    };
 
-Driver.prototype.startMazeTraversal = function startMazeTraversal()
-{
-    $(".traversalButton").removeAttr("disabled");
-    this.graphics.redrawCurrentMaze();
-};
+    this.startMaze = function startMaze()
+    {
+        explorer.getName().
+            done(function(name)
+            {
+                maze.getEntrance().
+                    done(function(location)
+                    {
+                        explorer.enterMaze(location).
+                            done(function(data)
+                            {
+                                startMazeTraversal();
 
-Driver.prototype.endMazeTraversal = function endMazeTraversal()
-{
-    $(".traversalButton").attr("disabled", "disabled");
-};
+                                explorerLocation = location;
+                                graphics.drawExplorerLocation(location, location);
+                            });
+                    }).fail(function()
+                    {
+                        updateLog("startMaze() failed");
+                    });
+            });
+    };
+
+    this.moveCycle = function moveCycle()
+    {
+        maze.getAvailableExits(explorerLocation).
+            done(function(exits)
+            {
+                explorer.whichWay(explorerLocation, exits).
+                    done(function(chosenDirection)
+                    {
+                        maze.attemptMazeMove(explorerLocation, chosenDirection).
+                            done(function(outcomeJSON)
+                            {
+                                var outcome = $.parseJSON(outcomeJSON);
+
+                                explorer.moveExplorer(explorerLocation, outcome.location).
+                                    done(function()
+                                    {
+                                        graphics.drawExplorerLocation(explorerLocation, outcome.location);
+                                        explorerLocation = outcome.location;
+
+                                        if(outcome.exitReached)
+                                        {
+                                            updateLog("Exit reached!");
+                                            explorer.exitMaze();
+                                            endMazeTraversal();
+                                        }
+                                        updateLog("-------------------------");
+                                    });
+                            }).error(function(outcome)
+                            {
+                                updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(explorerLocation));
+                                updateLog("-------------------------");
+                            });
+                    });
+
+            }).fail(function()
+            {
+                updateLog("moveCycle() failed: " + explorerLocation);
+            });
+    };
+}
+
