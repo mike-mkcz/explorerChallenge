@@ -27,15 +27,20 @@
                     <input type="text" class="form-control current-maze" readonly>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <a class="btn btn-success" role="button" onclick="DRIVER.startMaze()">Restart Maze</a>
-                <a class="btn btn-success traversalButton" role="button" onclick="DRIVER.moveCycle()">Move Cycle</a>
+            </div>
+            <div class="col-md-3">
+                <a class="btn btn-success traversalButton" role="button" onclick="DRIVER.changeSpeed(100)"><<</a>
+                <a id="goButton" class="btn btn-success traversalButton" role="button" onclick="DRIVER.startMoving()">Go</a>
+                <a id="pauseButton" class="btn btn-success traversalButton" role="button" onclick="DRIVER.stopMoving()">Pause</a>
+                <a class="btn btn-success traversalButton" role="button" onclick="DRIVER.changeSpeed(-100)">>></a>
             </div>
         </div>
         <div class="row">
             <div class="col-md-8">
                 <div class="maze-container">
-                    <canvas id="maze-canvas-back" class="back-canvas"></canvas>
+                    <canvas id="maze-canvas-back" class="hidden"></canvas>
                     <canvas id="maze-canvas-front"></canvas>
                 </div>
             </div>
