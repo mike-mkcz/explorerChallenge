@@ -12,10 +12,10 @@ function Explorer()
 
     this.whichWay = function whichWay(fromLocation, availableDirections)
     {
-        updateLog(explorerName + ": which way shall I go?");
+        LOG.updateLog(explorerName + ": which way shall I go?");
         return $.getJSON( "explorer/whichWayNow", {fromLocation: JSON.stringify(fromLocation), availableDirections:JSON.stringify(availableDirections)}, function( data )
         {
-            updateLog("choosing to go " + data);
+            LOG.updateLog("choosing to go " + data);
         });
     };
 
@@ -23,26 +23,26 @@ function Explorer()
     {
         return $.getJSON( "explorer/name", function( name )
         {
-            updateLog("Explorer entering the maze is " + name);
+            LOG.updateLog("Explorer entering the maze is " + name);
             explorerName = name;
         });
     };
 
     this.enterMaze = function enterMaze(location)
     {
-        updateLog(explorerName + " is entering the maze");
+        LOG.updateLog(explorerName + " is entering the maze");
         return $.post( "explorer/enterMaze", {entrance: JSON.stringify(location)});
     };
 
     this.moveExplorer = function moveExplorer(fromLocation, toLocation)
     {
-        updateLog(explorerName + " is moving from " + JSON.stringify(fromLocation) + " to " + JSON.stringify(toLocation));
+        LOG.updateLog(explorerName + " is moving from " + JSON.stringify(fromLocation) + " to " + JSON.stringify(toLocation));
         return $.post( "explorer/move", {fromLocation: JSON.stringify(fromLocation), toLocation: JSON.stringify(toLocation)});
     };
 
     this.exitMaze = function exitMaze()
     {
-        updateLog(explorerName + " is exiting the maze");
+        LOG.updateLog(explorerName + " is exiting the maze");
         $.post( "explorer/exitMaze");
     };
 }

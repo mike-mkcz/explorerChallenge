@@ -7,39 +7,39 @@ function Maze()
 
     this.attemptMazeMove = function attemptMazeMove(fromLocation, direction)
     {
-        updateLog("Can I move " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation) + "?");
+        LOG.updateLog("Can I move " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation) + "?");
         return $.post( "maze/move", {fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)}, function( outcome )
         {
             var outcomeJson = $.parseJSON(outcome);
 
-            updateLog("Valid move!, New location is [" + outcomeJson.location.x + "," + outcomeJson.location.y + "]");
+            LOG.updateLog("Valid move!, New location is [" + outcomeJson.location.x + "," + outcomeJson.location.y + "]");
 
             if(outcomeJson.exit)
             {
-                updateLog("exit reached");
+                LOG.updateLog("exit reached");
             }
         });
     };
 
    this.getEntrance = function getEntrance()
     {
-        updateLog("Finding entrance...");
+        LOG.updateLog("Finding entrance...");
         return $.getJSON( "maze/entrance", function( data )
         {
-            updateLog("entrance is at [" + data.x + "," + data.y + "]");
+            LOG.updateLog("entrance is at [" + data.x + "," + data.y + "]");
         });
     };
 
     this.getAvailableExits = function getAvailableExits(location)
     {
-        updateLog("What exits are available from " + JSON.stringify(location) + "?");
+        LOG.updateLog("What exits are available from " + JSON.stringify(location) + "?");
         return $.getJSON( "maze/exits", {fromLocation: JSON.stringify(location)}, function( data )
         {
             var exitString = "";
             $.each(data, function( index, value ) {
                 exitString += value + " ";
             });
-            updateLog("exits available [" +exitString + "]");
+            LOG.updateLog("exits available [" +exitString + "]");
 
         });
     };
@@ -57,7 +57,7 @@ function Maze()
                         html: $('<a/>', {
                             href: '#',
                             text: value,
-                            onclick: 'driver.setMaze("' + value + '")'
+                            onclick: 'DRIVER.setMaze("' + value + '")'
                         })
                     })
                 );
@@ -67,7 +67,7 @@ function Maze()
 
     this.setMaze = function setMaze(mazeName)
     {
-        updateLog("loading maze " + mazeName);
+        LOG.updateLog("loading maze " + mazeName);
         return $.post( "maze/maze", {file: mazeName}, function(mazeDefinition)
         {
             $(".current-maze").val("Current maze: " + mazeName);

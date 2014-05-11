@@ -1,18 +1,22 @@
-var scrollApi;
 
-function initialiseLog()
+function Log()
 {
-    var settings = {
-        showArrows: true
-    };
-    var pane = $('.scroll');
-    pane.jScrollPane(settings);
-    scrollApi = pane.data('jsp');
-}
+    var scrollApi;
 
-function updateLog(contentLine)
-{
-    scrollApi.getContentPane().append("<p style='padding-left: 10px; margin:0'>" + contentLine + "</p>");
-    scrollApi.reinitialise();
-    scrollApi.scrollToPercentY(100);
+    this.initialiseLog = function()
+    {
+        var settings = {
+            showArrows: true
+        };
+        var pane = $('.scroll');
+        pane.jScrollPane(settings);
+        scrollApi = pane.data('jsp');
+    }
+
+    this.updateLog = function(contentLine)
+    {
+        scrollApi.getContentPane().append("<p style='padding-left: 10px; margin:0'>" + contentLine + "</p>");
+        scrollApi.reinitialise();
+        scrollApi.scrollToPercentY(100);
+    }
 }

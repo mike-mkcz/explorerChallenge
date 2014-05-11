@@ -28,7 +28,7 @@ function Driver(theExplorer, theGraphics, theMaze)
     {
         var thisDriver = this;
         graphics.loadSprites();
-        initialiseLog();
+        LOG.initialiseLog();
         maze.getMazes().
             done(function(data)
             {
@@ -70,7 +70,7 @@ function Driver(theExplorer, theGraphics, theMaze)
                             });
                     }).fail(function()
                     {
-                        updateLog("startMaze() failed");
+                        LOG.updateLog("startMaze() failed");
                     });
             });
     };
@@ -96,22 +96,22 @@ function Driver(theExplorer, theGraphics, theMaze)
 
                                         if(outcome.exitReached)
                                         {
-                                            updateLog("Exit reached!");
+                                            LOG.updateLog("Exit reached!");
                                             explorer.exitMaze();
                                             endMazeTraversal();
                                         }
-                                        updateLog("-------------------------");
+                                        LOG.updateLog("-------------------------");
                                     });
                             }).error(function(outcome)
                             {
-                                updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(explorerLocation));
-                                updateLog("-------------------------");
+                                LOG.updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(explorerLocation));
+                                LOG.updateLog("-------------------------");
                             });
                     });
 
             }).fail(function()
             {
-                updateLog("moveCycle() failed: " + explorerLocation);
+                LOG.updateLog("moveCycle() failed: " + explorerLocation);
             });
     };
 }

@@ -1,9 +1,10 @@
 /*
     GLOBAL
  */
-var driver = new Driver(new Explorer(), new Graphics(), new Maze());
+var LOG = new Log();
+var DRIVER = new Driver(new Explorer(), new Graphics(), new Maze());
 
 $( document ).ready(function() {
 
-    driver.load();
+    DRIVER.load();
 });
