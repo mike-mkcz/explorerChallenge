@@ -11,6 +11,7 @@ function Driver(theExplorer, theGraphics, theMaze)
     var isMoving = false;
     var defaultMoveDelayMs = 500;
     var moveDelayMs = defaultMoveDelayMs;
+    var totalMoves = 0;
 
     var startMazeTraversal = function startMazeTraversal()
     {
@@ -20,6 +21,10 @@ function Driver(theExplorer, theGraphics, theMaze)
         LOG.clear();
     };
 
+    var updateTotalMoves = function updateTotalMoves()
+    {
+        $(".move-count-value").html(totalMoves);
+    };
 
     var moveCycle = function moveCycle()
     {
@@ -48,9 +53,11 @@ function Driver(theExplorer, theGraphics, theMaze)
             })
             .then(function afterMoveExplorer()
             {
+                totalMoves++;
                 graphics.drawExplorerLocation(explorerLocation, theMoveOutcome.location);
                 explorerLocation = theMoveOutcome.location;
                 LOG.updateLog("-------------------------");
+                updateTotalMoves();
 
                 if(theMoveOutcome.exitReached)
                 {
@@ -117,6 +124,8 @@ function Driver(theExplorer, theGraphics, theMaze)
     {
         var mazeEntrance = null;
         this.stopMoving();
+        totalMoves = 0;
+        updateTotalMoves();
 
         explorer.getName()
         .then(function afterGetName(name)

@@ -4,7 +4,7 @@
     padding-left: 20px;
 }
 
-#logScroll {
+#log-scroll {
     width: 400px;
     height:800px;
     overflow: auto;
@@ -18,4 +18,13 @@
 
 .hidden {
     display: none;
+}
+
+.move-count-container {
+    float: right;
+}
+
+.move-count {
+    font-weight: bold;
+    font-size: x-large;
 }

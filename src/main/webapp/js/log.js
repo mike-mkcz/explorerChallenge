@@ -3,14 +3,14 @@ function Log()
 {
     this.updateLog = function updateLog(contentLine)
     {
-        $("#logScroll").append("<p style='padding-left: 10px; margin:0'>" + contentLine + "</p>");
+        $("#log-scroll").append("<p style='padding-left: 10px; margin:0'>" + contentLine + "</p>");
 
-        var logScroll = document.getElementById("logScroll");
+        var logScroll = document.getElementById("log-scroll");
         logScroll.scrollTop = logScroll.scrollHeight;
     }
 
     this.clear = function clear()
     {
-        $("#logScroll").html("");
+        $("#log-scroll").html("");
     }
 }
