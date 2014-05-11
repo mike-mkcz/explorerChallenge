@@ -28,91 +28,100 @@ function Driver(theExplorer, theGraphics, theMaze)
     {
         var thisDriver = this;
         graphics.loadSprites();
-        LOG.initialiseLog();
-        maze.getMazes().
-            done(function(data)
-            {
-                maze.setDefaultMaze().
-                    done(function(mazeDefinition)
-                    {
-                        graphics.drawMaze($.parseJSON(mazeDefinition));
-                        thisDriver.startMaze();
-                    });
-            });
+
+        maze.getMazes()
+        .then(function afterGetMazes(data)
+        {
+            return maze.setDefaultMaze();
+        })
+        .then(function afterSetDefaultMaze(mazeDefinition)
+        {
+            graphics.drawMaze($.parseJSON(mazeDefinition));
+            thisDriver.startMaze();
+        })
+        .done();
     };
 
     this.setMaze = function setMaze(mazeName)
     {
         var thisDriver = this;
-        maze.setMaze(mazeName).
-            done(function(mazeDefinition)
-            {
-                graphics.drawMaze($.parseJSON(mazeDefinition));
-                thisDriver.startMaze();
-            });
+
+        maze.setMaze(mazeName)
+        .then(function afterSetMaze(mazeDefinition)
+        {
+            graphics.drawMaze($.parseJSON(mazeDefinition));
+            thisDriver.startMaze();
+        })
+        .done();
     };
 
     this.startMaze = function startMaze()
     {
-        explorer.getName().
-            done(function(name)
-            {
-                maze.getEntrance().
-                    done(function(location)
-                    {
-                        explorer.enterMaze(location).
-                            done(function(data)
-                            {
-                                startMazeTraversal();
+        var mazeEntrance = null;
 
-                                explorerLocation = location;
-                                graphics.drawExplorerLocation(location, location);
-                            });
-                    }).fail(function()
-                    {
-                        LOG.updateLog("startMaze() failed");
-                    });
-            });
+        explorer.getName()
+        .then(function afterGetName(name)
+        {
+            return maze.getEntrance();
+        })
+        .then(function afterGetEntrance(location)
+        {
+            mazeEntrance = location;
+            return explorer.enterMaze(location);
+        })
+        .then(function()
+        {
+            startMazeTraversal();
+
+            explorerLocation = mazeEntrance;
+            graphics.drawExplorerLocation(mazeEntrance, mazeEntrance);
+        })
+        .fail(function()
+        {
+            LOG.updateLog("startMaze() failed");
+        })
+        .done();
     };
 
     this.moveCycle = function moveCycle()
     {
-        maze.getAvailableExits(explorerLocation).
-            done(function(exits)
+        var theChosenDirection = null;
+        var theMoveOutcome = null;
+
+        maze.getAvailableExits(explorerLocation)
+        .then(function afterExits(exits)
+        {
+            return explorer.whichWay(explorerLocation, exits);
+        })
+        .then(function afterWhichWay(chosenDirection)
+        {
+            theChosenDirection = chosenDirection;
+            return maze.attemptMazeMove(explorerLocation, chosenDirection);
+        })
+        .then(function afterAttemptMove(outcomeJSON)
+        {
+            theMoveOutcome = $.parseJSON(outcomeJSON);
+            return explorer.moveExplorer(explorerLocation, theMoveOutcome.location);
+        })
+        .then(function afterMoveExplorer()
+        {
+            graphics.drawExplorerLocation(explorerLocation, theMoveOutcome.location);
+            explorerLocation = theMoveOutcome.location;
+
+            if(theMoveOutcome.exitReached)
             {
-                explorer.whichWay(explorerLocation, exits).
-                    done(function(chosenDirection)
-                    {
-                        maze.attemptMazeMove(explorerLocation, chosenDirection).
-                            done(function(outcomeJSON)
-                            {
-                                var outcome = $.parseJSON(outcomeJSON);
-
-                                explorer.moveExplorer(explorerLocation, outcome.location).
-                                    done(function()
-                                    {
-                                        graphics.drawExplorerLocation(explorerLocation, outcome.location);
-                                        explorerLocation = outcome.location;
-
-                                        if(outcome.exitReached)
-                                        {
-                                            LOG.updateLog("Exit reached!");
-                                            explorer.exitMaze();
-                                            endMazeTraversal();
-                                        }
-                                        LOG.updateLog("-------------------------");
-                                    });
-                            }).error(function(outcome)
-                            {
-                                LOG.updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(explorerLocation));
-                                LOG.updateLog("-------------------------");
-                            });
-                    });
-
-            }).fail(function()
-            {
-                LOG.updateLog("moveCycle() failed: " + explorerLocation);
-            });
+                LOG.updateLog("Exit reached!");
+                explorer.exitMaze();
+                endMazeTraversal();
+            }
+            LOG.updateLog("-------------------------");
+        })
+        .fail(function fail(err)
+        {
+            LOG.updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(explorerLocation));
+            LOG.updateLog("-------------------------");
+        })
+        .done();
     };
 }
 
