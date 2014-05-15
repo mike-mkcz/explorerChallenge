@@ -19,7 +19,7 @@
 
         <div class="row load-maze-row">
             <div class="col-md-3">
-                <div class="input-group" style="float:left">
+                <div class="input-group">
                     <div class="input-group-btn">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Load Maze<span class="caret"></span></button>
                         <ul class="dropdown-menu maze-list"></ul>
@@ -36,6 +36,14 @@
                 <a id="pauseButton" class="btn btn-success traversalButton" role="button" onclick="DRIVER.stopMoving()">Pause</a>
                 <a class="btn btn-success traversalButton" role="button" onclick="DRIVER.changeSpeed(-100)">>></a>
                 <span class="move-count-container move-count">Moves: <span class="move-count-value move-count"></span></span>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group explorer-host-container">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="DRIVER.setExplorerHost()">Change Explorer Host</button>
+                    </span>
+                    <input id="explorer-host" type="text" class="form-control" value="127.0.0.1">
+                </div>
             </div>
         </div>
         <div class="row">

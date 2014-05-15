@@ -104,6 +104,10 @@ function Driver(theExplorer, theGraphics, theMaze)
             graphics.drawMaze($.parseJSON(mazeDefinition));
             thisDriver.startMaze();
         })
+        .then(function afterStartMaze()
+        {
+            thisDriver.setExplorerHost();
+        })
         .done();
     };
 
@@ -118,6 +122,12 @@ function Driver(theExplorer, theGraphics, theMaze)
             thisDriver.startMaze();
         })
         .done();
+    };
+
+    this.setExplorerHost = function setExplorerHost()
+    {
+        var chosenHost = $("#explorer-host").val();
+        explorer.setExplorerHost(chosenHost);
     };
 
     this.startMaze = function startMaze()
