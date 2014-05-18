@@ -92,7 +92,9 @@ function Maze()
     {
         if(_.isEqual(location, keyLocation))
         {
-            return key;
+            var keyToReturn = key;
+            this.setKey(null, null);
+            return keyToReturn;
         }
         return null;
     };

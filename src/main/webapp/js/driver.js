@@ -57,6 +57,7 @@ function Driver(theExplorer, theGraphics, theMaze)
 
                 if(key != null)
                 {
+                    graphics.keyFound(theMoveOutcome.location);
                     return explorer.keyFound(key, theMoveOutcome.location);
                 }
                 return null;

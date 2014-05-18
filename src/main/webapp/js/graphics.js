@@ -19,6 +19,7 @@ function Graphics()
     var pathSprite = null;
     var exitSprite = null;
     var keySprite = null;
+    var keyFoundSprite = null;
 
     var drawMazeToContext = function drawMazeToContext(mazeDefinition, ctx)
     {
@@ -141,7 +142,18 @@ function Graphics()
 
         keySprite = new Image();
         keySprite.src = "../images/key.png";
+
+        keyFoundSprite = new Image();
+        keyFoundSprite.src = "../images/tick.png";
     };
+
+    this.keyFound = function keyFound(location)
+    {
+        var mazeCanvas = document.getElementById("maze-canvas-back");
+        var ctx = mazeCanvas.getContext("2d");
+
+        ctx.drawImage(keyFoundSprite, absoluteXCoordinatePx(location.x), absoluteYCoordinatePx(location.y));
+    }
 }
 
 
