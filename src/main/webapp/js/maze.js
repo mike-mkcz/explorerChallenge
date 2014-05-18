@@ -2,6 +2,13 @@
 function Maze()
 {
     /*
+        PRIVATE
+     */
+
+    var key = null;
+    var keyLocation = null;
+
+    /*
         PRIVILEGED
      */
 
@@ -74,6 +81,12 @@ function Maze()
             $(".traversalButton").attr("disabled", "disabled");
         });
     };
+
+    this.setKey = function setKey(theKey, theKeyLocation)
+    {
+        key = theKey;
+        keyLocation = theKeyLocation;
+    }
 
     this.setDefaultMaze = function setDefaultMaze()
     {

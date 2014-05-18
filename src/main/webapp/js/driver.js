@@ -118,6 +118,11 @@ function Driver(theExplorer, theGraphics, theMaze)
         maze.setMaze(mazeName)
         .then(function afterSetMaze(mazeDefinition)
         {
+            if(mazeDefinition.key != null)
+            {
+                maze.setKey($.parseJSON(mazeDefinition.key), $.parseJSON(mazeDefinition.keyLocation));
+            }
+
             graphics.drawMaze($.parseJSON(mazeDefinition));
             thisDriver.startMaze();
         })
@@ -147,7 +152,7 @@ function Driver(theExplorer, theGraphics, theMaze)
             mazeEntrance = location;
             return explorer.enterMaze(location);
         })
-        .then(function()
+        .then(function afterEnterMaze()
         {
             startMazeTraversal();
 

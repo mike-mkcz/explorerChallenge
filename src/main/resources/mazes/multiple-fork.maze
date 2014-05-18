@@ -2,6 +2,7 @@ width=16
 height=16
 entrance=0,7
 exit=15,8
+key=SECRET@3,0
 #maze
 !0000000000000000
 !0000000000000000

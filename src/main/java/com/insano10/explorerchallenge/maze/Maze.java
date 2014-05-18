@@ -10,8 +10,8 @@ public class Maze
     private final boolean[][] grid;
     private final Coordinate entrance;
     private final Coordinate exit;
-    private Key key;
-    private Coordinate keyLocation;
+    private final Key key;
+    private final Coordinate keyLocation;
 
     public Maze(boolean[][] grid, Coordinate entrance, Coordinate exit)
     {

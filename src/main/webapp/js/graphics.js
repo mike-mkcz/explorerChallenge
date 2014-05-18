@@ -18,7 +18,7 @@ function Graphics()
     var wallSprite = null;
     var pathSprite = null;
     var exitSprite = null;
-
+    var keySprite = null;
 
     var drawMazeToContext = function drawMazeToContext(mazeDefinition, ctx)
     {
@@ -47,7 +47,13 @@ function Graphics()
         }
 
         //exit
-        ctx.drawImage(exitSprite, absoluteXCoordinatePx(mazeDefinition.exit.x), absoluteYCoordinatePx(mazeDefinition.exit.y))
+        ctx.drawImage(exitSprite, absoluteXCoordinatePx(mazeDefinition.exit.x), absoluteYCoordinatePx(mazeDefinition.exit.y));
+
+        //key
+        if(mazeDefinition.key != null)
+        {
+            ctx.drawImage(keySprite, absoluteXCoordinatePx(mazeDefinition.keyLocation.x)+2, absoluteYCoordinatePx(mazeDefinition.keyLocation.y)+2);
+        }
     };
 
     var absoluteXCoordinatePx = function absoluteXCoordinatePx(xGridPos)
@@ -132,6 +138,9 @@ function Graphics()
 
         exitSprite = new Image();
         exitSprite.src = "../images/exit.png";
+
+        keySprite = new Image();
+        keySprite.src = "../images/key.png";
     };
 }
 
