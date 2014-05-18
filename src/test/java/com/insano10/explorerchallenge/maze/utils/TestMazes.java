@@ -7,6 +7,8 @@ import com.insano10.explorerchallenge.maze.Maze;
 public class TestMazes
 {
     public static final Key MAZE_TWO_KEY = new Key("MAZE TWO");
+    public static final Coordinate MAZE_TWO_KEY_LOCATION = Coordinate.create(1,1);
+
     /*
     Coordinate [0,0] is in the bottom left corner.
 
@@ -64,7 +66,7 @@ public class TestMazes
         grid[3][4] = false;
         grid[4][4] = false;
 
-        return new Maze(grid, entrance, exit, null);
+        return new Maze(grid, entrance, exit);
     }
 
     /*
@@ -119,6 +121,6 @@ public class TestMazes
         grid[4][4] = false;
         grid[5][4] = false;
 
-        return new Maze(grid, entrance, exit, MAZE_TWO_KEY);
+        return new Maze(grid, entrance, exit, MAZE_TWO_KEY, MAZE_TWO_KEY_LOCATION);
     }
 }

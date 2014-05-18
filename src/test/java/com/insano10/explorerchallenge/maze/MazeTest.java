@@ -154,4 +154,17 @@ public class MazeTest
         Maze mazeWithKey = TestMazes.testMazeTwo();
         assertFalse(mazeWithKey.unlockExitAtLocation(Coordinate.create(4, 0), key));
     }
+
+    @Test
+    public void shouldGetKeyLocationIfMazeRequiresKey() throws Exception
+    {
+        Maze mazeWithKey = TestMazes.testMazeTwo();
+        assertThat(mazeWithKey.getKeyLocation(), equalTo(TestMazes.MAZE_TWO_KEY_LOCATION));
+    }
+
+    @Test(expected=RuntimeException.class)
+    public void shouldThrowExceptionWhenGettingKeyLocationFromMazeWithNoKey() throws Exception
+    {
+        maze.getKeyLocation();
+    }
 }

@@ -15,7 +15,7 @@ public class MazeFileLoader
         Coordinate entrance;
         Coordinate exit;
         boolean[][] grid;
-        Key key;
+        KeyContainer keyContainer;
 
         int gridLinesScanned = 0;
 
@@ -32,7 +32,7 @@ public class MazeFileLoader
             height = getIntValueFromLines(lines, 1, "height");
             entrance = getCoordinateValueFromLines(lines, 2, "entrance");
             exit = getCoordinateValueFromLines(lines, 3, "exit");
-            key = getKeyValueFromLines(lines, 4, "key");
+            keyContainer = getKeyContainerFromLines(lines, 4, "key");
 
             grid = new boolean[width][height];
 
@@ -67,7 +67,14 @@ public class MazeFileLoader
                 throw new RuntimeException("Defined grid should be height " + height);
             }
 
-            return new Maze(grid, entrance, exit, key);
+            if(keyContainer == null)
+            {
+                return new Maze(grid, entrance, exit);
+            }
+            else
+            {
+                return new Maze(grid, entrance, exit, keyContainer.getKey(), keyContainer.getKeyLocation());
+            }
         }
     }
 
@@ -98,8 +105,7 @@ public class MazeFileLoader
             String[] tokens = line.split("=");
             if(tokens[0].equals(valueId))
             {
-                String[] coordinates = tokens[1].split(",");
-                return Coordinate.create(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
+                return getCoordinateFromString(tokens[1]);
             }
         }
         catch(Exception e)
@@ -109,8 +115,7 @@ public class MazeFileLoader
         throw new RuntimeException("Invalid " + valueId + " specified on line " + (indexOfValue+1));
     }
 
-
-    private Key getKeyValueFromLines(List<String> lines, int indexOfValue, String valueId)
+    private KeyContainer getKeyContainerFromLines(List<String> lines, int indexOfValue, String valueId)
     {
         try
         {
@@ -119,14 +124,23 @@ public class MazeFileLoader
 
             if(tokens[0].equals(valueId))
             {
-                return new Key(tokens[1]);
+                String[] keySplit = tokens[1].split("@");
+                String password = keySplit[0];
+                Coordinate keyLocation = getCoordinateFromString(keySplit[1]);
+                return new KeyContainer(new Key(password), keyLocation);
             }
         }
         catch(Exception e)
         {
-            throw new RuntimeException("Failed to read key on line " + (indexOfValue+1));
+            throw new RuntimeException("Failed to read key on line " + (indexOfValue+1) + ". Should be of format 'key=PASSWORD@0,0'");
         }
         return null;
+    }
+
+    private Coordinate getCoordinateFromString(String coordinateString)
+    {
+        String[] coordinates = coordinateString.split(",");
+        return Coordinate.create(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
     }
 
     private boolean canMoveThroughGridSquare(char c)
@@ -142,6 +156,28 @@ public class MazeFileLoader
         else
         {
             throw new RuntimeException("Grid contains invalid character: " + c);
+        }
+    }
+
+    private static class KeyContainer
+    {
+        private Key key;
+        private Coordinate keyLocation;
+
+        public KeyContainer(Key key, Coordinate keyLocation)
+        {
+            this.key = key;
+            this.keyLocation = keyLocation;
+        }
+
+        public Key getKey()
+        {
+            return key;
+        }
+
+        public Coordinate getKeyLocation()
+        {
+            return keyLocation;
         }
     }
 }
