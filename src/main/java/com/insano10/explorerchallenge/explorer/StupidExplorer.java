@@ -2,6 +2,7 @@ package com.insano10.explorerchallenge.explorer;
 
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
+import com.insano10.explorerchallenge.maze.Key;
 import org.apache.log4j.Logger;
 
 import java.util.Arrays;
@@ -39,5 +40,11 @@ public class StupidExplorer implements Explorer
     public void move(Coordinate fromLocation, Coordinate toLocation)
     {
         LOGGER.info("Guess I'll go a bit further! Moving from " + fromLocation + " to " + toLocation);
+    }
+
+    @Override
+    public void keyFound(Key key, Coordinate location)
+    {
+        LOGGER.info("OMG I found a key. So happy!");
     }
 }

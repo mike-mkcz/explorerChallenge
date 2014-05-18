@@ -46,6 +46,12 @@ function Explorer()
         return $.post(urlRoot + "explorer/move", {fromLocation: JSON.stringify(fromLocation), toLocation: JSON.stringify(toLocation)});
     };
 
+    this.keyFound = function keyFound(key, location)
+    {
+        LOG.updateLog(explorerName + " found a key at location " + JSON.stringify(location));
+        return $.post(urlRoot + "explorer/key", {key: JSON.stringify(key), location: JSON.stringify(location)});
+    }
+
     this.exitMaze = function exitMaze()
     {
         LOG.updateLog(explorerName + " is exiting the maze");

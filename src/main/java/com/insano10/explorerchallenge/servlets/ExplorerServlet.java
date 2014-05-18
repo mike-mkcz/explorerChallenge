@@ -6,6 +6,7 @@ import com.insano10.explorerchallenge.explorer.Explorer;
 import com.insano10.explorerchallenge.explorer.LeftHandWallExplorer;
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
+import com.insano10.explorerchallenge.maze.Key;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -57,6 +58,10 @@ public class ExplorerServlet extends HttpServlet
         {
             doMove(request);
         }
+        else if (request.getPathInfo().equals("/key"))
+        {
+            keyFound(request);
+        }
         else if (request.getPathInfo().equals("/exitMaze"))
         {
             exitMaze();
@@ -92,6 +97,14 @@ public class ExplorerServlet extends HttpServlet
         Coordinate toLocation = GSON.fromJson(request.getParameter("toLocation"), Coordinate.class);
 
         explorer.move(fromLocation, toLocation);
+    }
+
+    private void keyFound(HttpServletRequest request)
+    {
+        Coordinate location = GSON.fromJson(request.getParameter("location"), Coordinate.class);
+        Key key = GSON.fromJson(request.getParameter("key"), Key.class);
+
+        explorer.keyFound(key, location);
     }
 
     private void exitMaze()

@@ -53,6 +53,16 @@ function Driver(theExplorer, theGraphics, theMaze)
             })
             .then(function afterMoveExplorer()
             {
+                var key = maze.getKeyAtLocation(theMoveOutcome.location);
+
+                if(key != null)
+                {
+                    return explorer.keyFound(key, theMoveOutcome.location);
+                }
+                return null;
+            })
+            .then(function afterMayFindKey()
+            {
                 totalMoves++;
                 graphics.drawExplorerLocation(explorerLocation, theMoveOutcome.location);
                 explorerLocation = theMoveOutcome.location;
@@ -97,18 +107,9 @@ function Driver(theExplorer, theGraphics, theMaze)
         maze.getMazes()
         .then(function afterGetMazes(data)
         {
-            return maze.setDefaultMaze();
-        })
-        .then(function afterSetDefaultMaze(mazeDefinition)
-        {
-            graphics.drawMaze($.parseJSON(mazeDefinition));
-            thisDriver.startMaze();
-        })
-        .then(function afterStartMaze()
-        {
-            thisDriver.setExplorerHost();
-        })
-        .done();
+            var firstMazeInList = $(".maze-list-item").first().find("a").text();
+            return thisDriver.setMaze(firstMazeInList);
+        });
     };
 
     this.setMaze = function setMaze(mazeName)
@@ -118,15 +119,20 @@ function Driver(theExplorer, theGraphics, theMaze)
         maze.setMaze(mazeName)
         .then(function afterSetMaze(mazeDefinition)
         {
-            if(mazeDefinition.key != null)
+            var mazeDefinitionObjext = $.parseJSON(mazeDefinition);
+
+            if(mazeDefinitionObjext.key != 'undefined')
             {
-                maze.setKey($.parseJSON(mazeDefinition.key), $.parseJSON(mazeDefinition.keyLocation));
+                maze.setKey(mazeDefinitionObjext.key, mazeDefinitionObjext.keyLocation);
             }
 
-            graphics.drawMaze($.parseJSON(mazeDefinition));
+            graphics.drawMaze(mazeDefinitionObjext);
             thisDriver.startMaze();
         })
-        .done();
+        .then(function afterStartMaze()
+        {
+            thisDriver.setExplorerHost();
+        });
     };
 
     this.setExplorerHost = function setExplorerHost()

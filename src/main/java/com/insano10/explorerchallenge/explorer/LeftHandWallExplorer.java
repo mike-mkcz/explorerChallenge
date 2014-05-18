@@ -2,6 +2,7 @@ package com.insano10.explorerchallenge.explorer;
 
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
+import com.insano10.explorerchallenge.maze.Key;
 import org.apache.log4j.Logger;
 
 import java.util.Arrays;
@@ -12,6 +13,7 @@ public class LeftHandWallExplorer implements Explorer
     private static final Logger LOGGER = Logger.getLogger(LeftHandWallExplorer.class);
 
     private Direction currentlyFacing;
+    private Key key;
 
     @Override
     public String getName()
@@ -54,6 +56,13 @@ public class LeftHandWallExplorer implements Explorer
     public void move(Coordinate fromLocation, Coordinate toLocation)
     {
         LOGGER.info("Guess I'll go a bit further! Moving from " + fromLocation + " to " + toLocation);
+    }
+
+    @Override
+    public void keyFound(Key key, Coordinate location)
+    {
+        LOGGER.info("Ooooh a key! I'll put this somewhere for safe keeping");
+        this.key = key;
     }
 
     /*

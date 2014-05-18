@@ -86,12 +86,15 @@ function Maze()
     {
         key = theKey;
         keyLocation = theKeyLocation;
-    }
+    };
 
-    this.setDefaultMaze = function setDefaultMaze()
+    this.getKeyAtLocation = function getKeyAtLocation(location)
     {
-        var firstMazeInList = $(".maze-list-item").first().find("a").text();
-        return this.setMaze(firstMazeInList);
+        if(_.isEqual(location, keyLocation))
+        {
+            return key;
+        }
+        return null;
     };
 }
 

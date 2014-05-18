@@ -2,6 +2,7 @@ package com.insano10.explorerchallenge.explorer;
 
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
+import com.insano10.explorerchallenge.maze.Key;
 
 public interface Explorer
 {
@@ -14,4 +15,6 @@ public interface Explorer
     Direction whichWayNow(Coordinate fromLocation, Direction[] availableDirections);
 
     void move(Coordinate fromLocation, Coordinate toLocation);
+
+    void keyFound(Key key, Coordinate location);
 }
