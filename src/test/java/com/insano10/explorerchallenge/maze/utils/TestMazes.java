@@ -1,10 +1,12 @@
 package com.insano10.explorerchallenge.maze.utils;
 
 import com.insano10.explorerchallenge.maze.Coordinate;
+import com.insano10.explorerchallenge.maze.Key;
 import com.insano10.explorerchallenge.maze.Maze;
 
 public class TestMazes
 {
+    public static final Key MAZE_TWO_KEY = new Key("MAZE TWO");
     /*
     Coordinate [0,0] is in the bottom left corner.
 
@@ -62,7 +64,7 @@ public class TestMazes
         grid[3][4] = false;
         grid[4][4] = false;
 
-        return new Maze(grid, entrance, exit);
+        return new Maze(grid, entrance, exit, null);
     }
 
     /*
@@ -117,6 +119,6 @@ public class TestMazes
         grid[4][4] = false;
         grid[5][4] = false;
 
-        return new Maze(grid, entrance, exit);
+        return new Maze(grid, entrance, exit, MAZE_TWO_KEY);
     }
 }

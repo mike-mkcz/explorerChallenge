@@ -119,4 +119,39 @@ public class MazeTest
 
         assertTrue(maze.isExit(newLocation));
     }
+
+    @Test
+    public void shouldNotRequireKeyToExit() throws Exception
+    {
+        assertFalse(maze.requiresKeyToExit());
+    }
+
+    @Test
+    public void shouldRequireKeyToExit() throws Exception
+    {
+        Maze mazeWithKey = TestMazes.testMazeTwo();
+        assertTrue(mazeWithKey.requiresKeyToExit());
+    }
+
+    @Test
+    public void shouldUnlockExitWithCorrectKeyAtCorrectLocation() throws Exception
+    {
+        Maze mazeWithKey = TestMazes.testMazeTwo();
+        assertTrue(mazeWithKey.unlockExitAtLocation(Coordinate.create(4, 0), TestMazes.MAZE_TWO_KEY));
+    }
+
+    @Test
+    public void shouldNotUnlockExitIfLocationIsIncorrect() throws Exception
+    {
+        Maze mazeWithKey = TestMazes.testMazeTwo();
+        assertFalse(mazeWithKey.unlockExitAtLocation(Coordinate.create(0, 0), TestMazes.MAZE_TWO_KEY));
+    }
+
+    @Test
+    public void shouldNotUnlockExitWithWrongKey() throws Exception
+    {
+        Key key = new Key("NOT THE RIGHT KEY");
+        Maze mazeWithKey = TestMazes.testMazeTwo();
+        assertFalse(mazeWithKey.unlockExitAtLocation(Coordinate.create(4, 0), key));
+    }
 }

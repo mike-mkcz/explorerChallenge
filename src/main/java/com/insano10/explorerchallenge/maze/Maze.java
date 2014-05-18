@@ -10,12 +10,14 @@ public class Maze
     private final boolean[][] grid;
     private final Coordinate entrance;
     private final Coordinate exit;
+    private Key key;
 
-    public Maze(boolean[][] grid, Coordinate entrance, Coordinate exit)
+    public Maze(boolean[][] grid, Coordinate entrance, Coordinate exit, Key key)
     {
         this.grid = grid;
         this.entrance = entrance;
         this.exit = exit;
+        this.key = key;
         this.maxXCoordinate = grid.length - 1;
         this.maxYCoordinate = grid[0].length - 1;
 
@@ -49,6 +51,23 @@ public class Maze
     public Coordinate getEntrance()
     {
         return entrance;
+    }
+
+    public boolean requiresKeyToExit()
+    {
+        return key != null;
+    }
+
+    public boolean unlockExitAtLocation(Coordinate exitLocation, Key key)
+    {
+        if(isExit(exitLocation))
+        {
+            if(this.key.equals(key))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isExit(Coordinate location)

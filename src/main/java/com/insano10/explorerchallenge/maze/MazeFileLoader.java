@@ -15,6 +15,7 @@ public class MazeFileLoader
         Coordinate entrance;
         Coordinate exit;
         boolean[][] grid;
+        Key key;
 
         int gridLinesScanned = 0;
 
@@ -31,6 +32,7 @@ public class MazeFileLoader
             height = getIntValueFromLines(lines, 1, "height");
             entrance = getCoordinateValueFromLines(lines, 2, "entrance");
             exit = getCoordinateValueFromLines(lines, 3, "exit");
+            key = getKeyValueFromLines(lines, 4, "key");
 
             grid = new boolean[width][height];
 
@@ -65,7 +67,7 @@ public class MazeFileLoader
                 throw new RuntimeException("Defined grid should be height " + height);
             }
 
-            return new Maze(grid, entrance, exit);
+            return new Maze(grid, entrance, exit, key);
         }
     }
 
@@ -105,6 +107,26 @@ public class MazeFileLoader
             //continue to exception
         }
         throw new RuntimeException("Invalid " + valueId + " specified on line " + (indexOfValue+1));
+    }
+
+
+    private Key getKeyValueFromLines(List<String> lines, int indexOfValue, String valueId)
+    {
+        try
+        {
+            String line = lines.get(indexOfValue);
+            String[] tokens = line.split("=");
+
+            if(tokens[0].equals(valueId))
+            {
+                return new Key(tokens[1]);
+            }
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException("Failed to read key on line " + (indexOfValue+1));
+        }
+        return null;
     }
 
     private boolean canMoveThroughGridSquare(char c)
