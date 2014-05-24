@@ -38,6 +38,17 @@ public class MazeFileLoaderTest
     }
 
     @Test
+    public void shouldLoadMazeWithWhitespaceInCoordinates() throws Exception
+    {
+        File mazeFile = new File("src/test/resources/mazes/coordinatesWithWhiteSpace.maze");
+        Maze expectedMaze = TestMazes.testMazeWithWhiteSpace();
+
+        Maze maze = fileLoader.loadFromFile(mazeFile);
+
+        ReflectionAssert.assertReflectionEquals(expectedMaze, maze);
+    }
+
+    @Test
     public void firstLineMustBeWidth() throws Exception
     {
         assertRuntimeException("Invalid width specified on line 1");

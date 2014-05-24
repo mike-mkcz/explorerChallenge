@@ -25,6 +25,8 @@ public class LeftHandWallExplorer implements Explorer
     public void enterMaze(Coordinate startLocation)
     {
         LOGGER.info("I'm going in! Starting location: " + startLocation);
+        currentlyFacing = null;
+        key = null;
     }
 
     @Override

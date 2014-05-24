@@ -13,6 +13,11 @@ function Maze()
         PRIVILEGED
      */
 
+    this.reset = function reset()
+    {
+        keyFound = false;
+    };
+
     this.attemptMazeMove = function attemptMazeMove(fromLocation, direction)
     {
         LOG.updateLog("Can I move " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation) + "?");
@@ -102,12 +107,12 @@ function Maze()
     this.requiresKeyToExit = function requiresKeyToExit()
     {
         return key != null;
-    }
+    };
 
     this.canExitWithKey = function canExitWithKey(theKey)
     {
         return _.isEqual(theKey, key);
-    }
+    };
 }
 
 

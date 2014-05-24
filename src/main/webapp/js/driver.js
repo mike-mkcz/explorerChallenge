@@ -196,6 +196,7 @@ function Driver(theExplorer, theGraphics, theMaze)
         this.stopMoving();
         totalMoves = 0;
         failedMoveCount = 0;
+        maze.reset();
         updateTotalMoves();
 
         explorer.getName()
@@ -228,14 +229,14 @@ function Driver(theExplorer, theGraphics, theMaze)
         $("#pauseButton").show();
         isMoving = true;
         moveCycle();
-    }
+    };
 
     this.stopMoving = function stopMoving()
     {
         $("#pauseButton").hide();
         $("#goButton").show();
         isMoving = false;
-    }
+    };
 
     this.changeSpeed = function changeSpeed(delta)
     {

@@ -158,7 +158,7 @@ public class MazeFileLoader
     private Coordinate getCoordinateFromString(String coordinateString)
     {
         String[] coordinates = coordinateString.split(",");
-        return Coordinate.create(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
+        return Coordinate.create(Integer.parseInt(coordinates[0].trim()), Integer.parseInt(coordinates[1].trim()));
     }
 
     private boolean canMoveThroughGridSquare(char c)

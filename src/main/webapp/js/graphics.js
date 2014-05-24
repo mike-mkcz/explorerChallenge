@@ -7,6 +7,7 @@ function Graphics()
     var mazeCanvasWidth = 1000;
     var mazeCanvasHeight = 800;
     var mazeSquareSize = 20;
+    var scale = 1.0;
 
     var currentMazeDefinition = null;
     var mazeMaxXCoordinate = 0;
@@ -23,13 +24,10 @@ function Graphics()
 
     var drawMazeToContext = function drawMazeToContext(mazeDefinition, ctx)
     {
-        ctx.clearRect(0, 0, mazeCanvasWidth, mazeCanvasHeight);
+        ctx.save();
+        ctx.scale(scale, scale);
 
-        //border
-//        ctx.beginPath();
-//        ctx.strokeStyle = "#000000";
-//        ctx.rect(0, 0, mazeCanvasWidth, mazeCanvasHeight);
-//        ctx.stroke();
+        ctx.clearRect(0, 0, mazeCanvasWidth, mazeCanvasHeight);
 
         //squares
         for(var y=0 ; y<=mazeMaxYCoordinate; y++)
@@ -55,6 +53,8 @@ function Graphics()
         {
             ctx.drawImage(keySprite, absoluteXCoordinatePx(mazeDefinition.keyLocation.x)+2, absoluteYCoordinatePx(mazeDefinition.keyLocation.y)+2);
         }
+
+        ctx.restore();
     };
 
     var absoluteXCoordinatePx = function absoluteXCoordinatePx(xGridPos)
@@ -89,8 +89,22 @@ function Graphics()
         mazeMaxYCoordinate = mazeDefinition.maxYCoordinate;
         var mazeWidthPx = mazeMaxXCoordinate * mazeSquareSize;
         var mazeHeightPx = mazeMaxYCoordinate * mazeSquareSize;
-        mazeXOffsetPx = (mazeCanvasWidth - mazeWidthPx)/2;
-        mazeYOffsetPx = (mazeCanvasHeight - mazeHeightPx)/2;
+
+        var xScale = mazeCanvas.width/mazeWidthPx;
+        var yScale = mazeCanvas.height/mazeHeightPx;
+        var lowestScale = Math.min(xScale, yScale)-0.05;
+
+        if(lowestScale < 1.0)
+        {
+            scale = lowestScale;
+        }
+        else
+        {
+            scale = 1.0;
+        }
+
+        mazeXOffsetPx = (mazeCanvasWidth - (mazeWidthPx*scale))/2;
+        mazeYOffsetPx = (mazeCanvasHeight - (mazeHeightPx*scale))/2;
     };
 
     this.redrawCurrentMaze = function redrawCurrentMaze()
@@ -114,16 +128,25 @@ function Graphics()
         var mazeCanvas = document.getElementById("maze-canvas-back");
         var ctx = mazeCanvas.getContext("2d");
 
+        ctx.save();
+        ctx.scale(scale, scale);
+
         ctx.beginPath();
         ctx.strokeStyle = "#FF0000";
         ctx.moveTo(absoluteXCoordinatePx(oldLocation.x) + mazeSquareSize/2, absoluteYCoordinatePx(oldLocation.y) + mazeSquareSize/2);
         ctx.lineTo(absoluteXCoordinatePx(newLocation.x) + mazeSquareSize/2, absoluteYCoordinatePx(newLocation.y) + mazeSquareSize/2);
         ctx.stroke();
+        ctx.restore();
 
         var outputCanvas = document.getElementById("maze-canvas-front");
         var outputCtx = outputCanvas.getContext("2d");
+
         outputCtx.drawImage(mazeCanvas, 0, 0);
+
+        outputCtx.save();
+        outputCtx.scale(scale, scale);
         outputCtx.drawImage(explorerSprite, absoluteXCoordinatePx(newLocation.x)+3, absoluteYCoordinatePx(newLocation.y));
+        outputCtx.restore();
     };
 
     this.loadSprites = function loadSprites()
@@ -152,7 +175,10 @@ function Graphics()
         var mazeCanvas = document.getElementById("maze-canvas-back");
         var ctx = mazeCanvas.getContext("2d");
 
+        ctx.save();
+        ctx.scale(scale, scale);
         ctx.drawImage(keyFoundSprite, absoluteXCoordinatePx(location.x), absoluteYCoordinatePx(location.y));
+        ctx.restore();
     }
 }
 
