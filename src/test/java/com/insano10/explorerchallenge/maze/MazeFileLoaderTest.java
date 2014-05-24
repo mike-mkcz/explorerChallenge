@@ -118,6 +118,33 @@ public class MazeFileLoaderTest
         fileLoader.loadFromFile(mazeFile);
     }
 
+    @Test
+    public void shouldNotLoadMazeFileWhereSpecifiedKeyIsMalformed() throws Exception
+    {
+        assertRuntimeException("Failed to read key on line 5. Should be of format 'key=PASSWORD@0,0'");
+
+        File mazeFile = new File("src/test/resources/mazes/badKey.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
+    @Test
+    public void shouldNotLoadMazeFileWhereMoreThanOneKeyHasBeenSpecified() throws Exception
+    {
+        assertRuntimeException("Invalid content found on line 6");
+
+        File mazeFile = new File("src/test/resources/mazes/multipleKeys.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
+    @Test
+    public void shouldNotLoadMazeFileWhereGridDefinitionContainsInvalidContent() throws Exception
+    {
+        assertRuntimeException("Invalid content found on line 9");
+
+        File mazeFile = new File("src/test/resources/mazes/invalidMazeContent.maze");
+        fileLoader.loadFromFile(mazeFile);
+    }
+
     private void assertRuntimeException(String message)
     {
         expectedException.expect(RuntimeException.class);

@@ -8,6 +8,14 @@ import java.util.Scanner;
 
 public class MazeFileLoader
 {
+
+    private static final int WIDTH_LINE_INDEX = 0;
+    private static final int HEIGHT_LINE_INDEX = 1;
+    private static final int ENTRANCE_LINE_INDEX = 2;
+    private static final int EXIT_LINE_INDEX = 3;
+    private static final int KEY_LINE_INDEX = 4;
+    private static final int MAZE_START_LINE_INDEX = 5;
+
     public Maze loadFromFile(File file) throws IOException
     {
         int width;
@@ -28,15 +36,16 @@ public class MazeFileLoader
                 lines.add(scanner.nextLine());
             }
 
-            width = getIntValueFromLines(lines, 0, "width");
-            height = getIntValueFromLines(lines, 1, "height");
-            entrance = getCoordinateValueFromLines(lines, 2, "entrance");
-            exit = getCoordinateValueFromLines(lines, 3, "exit");
-            keyContainer = getKeyContainerFromLines(lines, 4, "key");
+            width = getIntValueFromLines(lines, WIDTH_LINE_INDEX, "width");
+            height = getIntValueFromLines(lines, HEIGHT_LINE_INDEX, "height");
+            entrance = getCoordinateValueFromLines(lines, ENTRANCE_LINE_INDEX, "entrance");
+            exit = getCoordinateValueFromLines(lines, EXIT_LINE_INDEX, "exit");
+            keyContainer = getKeyContainerFromLines(lines, KEY_LINE_INDEX, "key");
 
             grid = new boolean[width][height];
 
-            for(String line : lines.subList(4, lines.size()))
+            int totalMazeLinesScanned = 1;
+            for(String line : lines.subList(MAZE_START_LINE_INDEX, lines.size()))
             {
                 if(line.startsWith("!"))
                 {
@@ -60,6 +69,15 @@ public class MazeFileLoader
 
                     gridLinesScanned++;
                 }
+                else
+                {
+                    if(!line.equals("#maze"))
+                    {
+                        throw new RuntimeException("Invalid content found on line " + (MAZE_START_LINE_INDEX + totalMazeLinesScanned));
+                    }
+                }
+
+                totalMazeLinesScanned++;
             }
 
             if(gridLinesScanned != height)
