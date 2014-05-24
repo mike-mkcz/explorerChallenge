@@ -26,10 +26,10 @@ function Graphics()
         ctx.clearRect(0, 0, mazeCanvasWidth, mazeCanvasHeight);
 
         //border
-        ctx.beginPath();
-        ctx.strokeStyle = "#000000";
-        ctx.rect(0, 0, mazeCanvasWidth, mazeCanvasHeight);
-        ctx.stroke();
+//        ctx.beginPath();
+//        ctx.strokeStyle = "#000000";
+//        ctx.rect(0, 0, mazeCanvasWidth, mazeCanvasHeight);
+//        ctx.stroke();
 
         //squares
         for(var y=0 ; y<=mazeMaxYCoordinate; y++)

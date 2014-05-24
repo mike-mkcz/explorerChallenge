@@ -78,7 +78,7 @@ function Maze()
         LOG.updateLog("loading maze " + mazeName);
         return $.post( "maze/maze", {file: mazeName}, function(mazeDefinition)
         {
-            $(".current-maze").val("Current maze: " + mazeName);
+            $(".current-maze").val(mazeName);
             $(".traversalButton").attr("disabled", "disabled");
         });
     };
