@@ -72,9 +72,7 @@ function Driver(theExplorer, theGraphics, theMaze)
 
                 if(theMoveOutcome.exitReached)
                 {
-                    LOG.updateLog("Exit reached!");
-                    explorer.exitMaze();
-                    endMazeTraversal();
+                    attemptToExitMaze();
                 }
                 else
                 {
@@ -88,6 +86,39 @@ function Driver(theExplorer, theGraphics, theMaze)
                 LOG.updateLog("-------------------------");
             })
             .done();
+    };
+
+    var attemptToExitMaze = function attemptToExitMaze()
+    {
+        LOG.updateLog("Exit reached!");
+
+        if(maze.requiresKeyToExit())
+        {
+            explorer.getAcquiredKey()
+                .then(function afterGetAcquiredKey(key)
+                {
+                    if(maze.canExitWithKey(key))
+                    {
+                        LOG.updateLog("Exiting maze with key");
+                        exitMaze();
+                    }
+                    else
+                    {
+                        LOG.updateLog("Failed to exit maze without the required key");
+                        setTimeout(moveCycle, moveDelayMs);
+                    }
+                });
+        }
+        else
+        {
+            exitMaze();
+        }
+    };
+
+    var exitMaze = function exitMaze()
+    {
+        explorer.exitMaze();
+        endMazeTraversal();
     };
 
     var endMazeTraversal = function endMazeTraversal()
@@ -120,14 +151,14 @@ function Driver(theExplorer, theGraphics, theMaze)
         maze.setMaze(mazeName)
         .then(function afterSetMaze(mazeDefinition)
         {
-            var mazeDefinitionObjext = $.parseJSON(mazeDefinition);
+            var mazeDefinitionObject = $.parseJSON(mazeDefinition);
 
-            if(mazeDefinitionObjext.key != 'undefined')
+            if(mazeDefinitionObject.key != 'undefined')
             {
-                maze.setKey(mazeDefinitionObjext.key, mazeDefinitionObjext.keyLocation);
+                maze.setKey(mazeDefinitionObject.key, mazeDefinitionObject.keyLocation);
             }
 
-            graphics.drawMaze(mazeDefinitionObjext);
+            graphics.drawMaze(mazeDefinitionObject);
             thisDriver.startMaze();
         })
         .then(function afterStartMaze()

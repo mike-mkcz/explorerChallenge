@@ -65,6 +65,13 @@ public class LeftHandWallExplorer implements Explorer
         this.key = key;
     }
 
+    @Override
+    public Key getKey()
+    {
+        LOGGER.info("Lucky I saved that key");
+        return key;
+    }
+
     /*
     From whichever way you are facing, try and follow the left hand wall
      */

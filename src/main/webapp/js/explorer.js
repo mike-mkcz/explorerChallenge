@@ -50,7 +50,15 @@ function Explorer()
     {
         LOG.updateLog(explorerName + " found a key at location " + JSON.stringify(location));
         return $.post(urlRoot + "explorer/key", {key: JSON.stringify(key), location: JSON.stringify(location)});
-    }
+    };
+
+    this.getAcquiredKey = function getAcquiredKey()
+    {
+        return $.getJSON(urlRoot + "explorer/key", function(key)
+        {
+            LOG.updateLog(explorerName + " is going to use key " + JSON.stringify(key));
+        });
+    };
 
     this.exitMaze = function exitMaze()
     {

@@ -41,6 +41,10 @@ public class ExplorerServlet extends HttpServlet
         {
             getName(response);
         }
+        else if (request.getPathInfo().equals("/key"))
+        {
+            getKey(response);
+        }
         else
         {
             throw new RuntimeException("Unknown get request: " + request.getPathInfo());
@@ -83,6 +87,11 @@ public class ExplorerServlet extends HttpServlet
     private void getName(HttpServletResponse response) throws IOException
     {
         response.getWriter().println(GSON.toJson(explorer.getName()));
+    }
+
+    private void getKey(HttpServletResponse response) throws IOException
+    {
+        response.getWriter().println(GSON.toJson(explorer.getKey()));
     }
 
     private void enterMaze(HttpServletRequest request)

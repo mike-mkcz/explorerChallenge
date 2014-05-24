@@ -17,4 +17,6 @@ public interface Explorer
     void move(Coordinate fromLocation, Coordinate toLocation);
 
     void keyFound(Key key, Coordinate location);
+
+    Key getKey();
 }

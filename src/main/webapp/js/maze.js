@@ -7,6 +7,7 @@ function Maze()
 
     var key = null;
     var keyLocation = null;
+    var keyFound = false;
 
     /*
         PRIVILEGED
@@ -90,14 +91,23 @@ function Maze()
 
     this.getKeyAtLocation = function getKeyAtLocation(location)
     {
-        if(_.isEqual(location, keyLocation))
+        if(!keyFound && _.isEqual(location, keyLocation))
         {
-            var keyToReturn = key;
-            this.setKey(null, null);
-            return keyToReturn;
+            keyFound = true;
+            return key;
         }
         return null;
     };
+
+    this.requiresKeyToExit = function requiresKeyToExit()
+    {
+        return key != null;
+    }
+
+    this.canExitWithKey = function canExitWithKey(theKey)
+    {
+        return _.isEqual(theKey, key);
+    }
 }
 
 

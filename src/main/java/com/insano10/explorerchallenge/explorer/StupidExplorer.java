@@ -47,4 +47,11 @@ public class StupidExplorer implements Explorer
     {
         LOGGER.info("OMG I found a key. So happy!");
     }
+
+    @Override
+    public Key getKey()
+    {
+        LOGGER.info("Oh Noes I lost my key");
+        return null;
+    }
 }
