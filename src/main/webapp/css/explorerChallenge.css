@@ -32,20 +32,22 @@
 
 .move-count-container {
     float: left;
-    width: 160px;
+    width: 150px;
+    height: 34px;
     border: 1px #24688f solid;
-    border-radius: 8px;
+    border-radius: 4px;
     background-color: #ffffff;
+    padding-top: 5px;
     padding-left:15px;
-    margin-left: 60px;
+    margin-left: 70px;
 }
 
 .move-count {
     font-weight: bold;
-    font-size: x-large;
+    font-size: large;
 }
 
 .explorer-host-container {
     width: 400px;
-    margin-left: 250px;
+    margin-left: 255px;
 }
