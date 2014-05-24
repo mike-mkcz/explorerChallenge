@@ -12,6 +12,7 @@ function Driver(theExplorer, theGraphics, theMaze)
     var defaultMoveDelayMs = 500;
     var moveDelayMs = defaultMoveDelayMs;
     var totalMoves = 0;
+    var failedMoveCount = 0;
 
     var startMazeTraversal = function startMazeTraversal()
     {
@@ -76,16 +77,18 @@ function Driver(theExplorer, theGraphics, theMaze)
                 }
                 else
                 {
-                    setTimeout(moveCycle, moveDelayMs);
+                    failedMoveCount = 0;
+                    nextMove();
                 }
 
             })
             .fail(function fail(err)
             {
-                LOG.updateLog("Failed to move " + JSON.stringify(chosenDirection) + " from " + JSON.stringify(explorerLocation));
+                LOG.updateLog("Failed to move " + JSON.stringify(theChosenDirection) + " from " + JSON.stringify(explorerLocation));
                 LOG.updateLog("-------------------------");
-            })
-            .done();
+                failedMoveCount++;
+                nextMove();
+            });
     };
 
     var attemptToExitMaze = function attemptToExitMaze()
@@ -105,7 +108,7 @@ function Driver(theExplorer, theGraphics, theMaze)
                     else
                     {
                         LOG.updateLog("Failed to exit maze without the required key");
-                        setTimeout(moveCycle, moveDelayMs);
+                        nextMove();
                     }
                 });
         }
@@ -124,6 +127,20 @@ function Driver(theExplorer, theGraphics, theMaze)
     var endMazeTraversal = function endMazeTraversal()
     {
         $(".traversalButton").attr("disabled", "disabled");
+    };
+
+    var nextMove = function nextMove()
+    {
+        if(failedMoveCount < 5)
+        {
+            setTimeout(moveCycle, moveDelayMs);
+        }
+        else
+        {
+            LOG.updateLog("You appear to be stuck at " + JSON.stringify(explorerLocation));
+            LOG.updateLog("GAME OVER");
+            endMazeTraversal();
+        }
     };
 
     /*
@@ -178,6 +195,7 @@ function Driver(theExplorer, theGraphics, theMaze)
         var mazeEntrance = null;
         this.stopMoving();
         totalMoves = 0;
+        failedMoveCount = 0;
         updateTotalMoves();
 
         explorer.getName()
