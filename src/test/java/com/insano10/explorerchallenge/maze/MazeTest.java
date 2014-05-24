@@ -107,6 +107,13 @@ public class MazeTest
         maze.move(location, Direction.WEST);
     }
 
+    @Test(expected = InvalidMoveException.class)
+    public void shouldNotAllowMovementWhenADirectionHasNotBeenProvided() throws Exception
+    {
+        Coordinate location = Coordinate.create(0, 2);
+        maze.move(location, null);
+    }
+
     @Test
     public void shouldAllowValidPathThroughMaze() throws Exception
     {

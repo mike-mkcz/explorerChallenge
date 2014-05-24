@@ -29,8 +29,15 @@ function Explorer()
     {
         return $.getJSON(urlRoot + "explorer/name", function( name )
         {
-            LOG.updateLog("Explorer entering the maze is " + name);
-            explorerName = name;
+            if(name != null)
+            {
+                explorerName = name;
+            }
+            else
+            {
+                explorerName = "UNKNOWN";
+            }
+            LOG.updateLog("Explorer entering the maze is " + explorerName);
         });
     };
 

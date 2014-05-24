@@ -41,14 +41,17 @@ public class Maze
 
     public Coordinate move(Coordinate fromLocation, Direction direction) throws InvalidMoveException
     {
-        Coordinate newLocation = Coordinate.create(fromLocation.getX() + direction.getxOffset(),
-                                                   fromLocation.getY() + direction.getyOffset());
-
-        if (coordinateIsWithinMaze(newLocation))
+        if(direction != null)
         {
-            if(grid[newLocation.getX()][newLocation.getY()])
+            Coordinate newLocation = Coordinate.create(fromLocation.getX() + direction.getxOffset(),
+                                                       fromLocation.getY() + direction.getyOffset());
+
+            if (coordinateIsWithinMaze(newLocation))
             {
-                return newLocation;
+                if(grid[newLocation.getX()][newLocation.getY()])
+                {
+                    return newLocation;
+                }
             }
         }
 

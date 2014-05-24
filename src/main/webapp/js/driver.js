@@ -19,7 +19,6 @@ function Driver(theExplorer, theGraphics, theMaze)
         $(".traversalButton").removeAttr("disabled");
         graphics.redrawCurrentMaze();
         moveDelayMs = defaultMoveDelayMs;
-        LOG.clear();
     };
 
     var updateTotalMoves = function updateTotalMoves()
@@ -192,6 +191,7 @@ function Driver(theExplorer, theGraphics, theMaze)
 
     this.startMaze = function startMaze()
     {
+        LOG.clear();
         var mazeEntrance = null;
         this.stopMoving();
         totalMoves = 0;
