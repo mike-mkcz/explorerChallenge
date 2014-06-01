@@ -72,7 +72,7 @@ function Driver(theExplorer, theGraphics, theMaze)
 
                 if(theMoveOutcome.exitReached)
                 {
-                    attemptToExitMaze();
+                    attemptToExitMaze(theMoveOutcome.location);
                 }
                 else
                 {
@@ -90,9 +90,11 @@ function Driver(theExplorer, theGraphics, theMaze)
             });
     };
 
-    var attemptToExitMaze = function attemptToExitMaze()
+    var attemptToExitMaze = function attemptToExitMaze(location)
     {
         LOG.updateLog("Exit reached!");
+
+        explorer.exitReached(location);
 
         if(maze.requiresKeyToExit())
         {

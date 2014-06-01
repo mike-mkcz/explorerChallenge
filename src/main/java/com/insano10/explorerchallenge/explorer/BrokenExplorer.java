@@ -50,4 +50,9 @@ public class BrokenExplorer implements Explorer
     {
         return new Key("HAXOR");
     }
+
+    @Override
+    public void exitReached(Coordinate location)
+    {
+    }
 }

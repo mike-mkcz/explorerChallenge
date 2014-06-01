@@ -66,6 +66,10 @@ public class ExplorerServlet extends HttpServlet
         {
             keyFound(request);
         }
+        else if (request.getPathInfo().equals("/exitReached"))
+        {
+            exitReached(request);
+        }
         else if (request.getPathInfo().equals("/exitMaze"))
         {
             exitMaze();
@@ -114,6 +118,12 @@ public class ExplorerServlet extends HttpServlet
         Key key = GSON.fromJson(request.getParameter("key"), Key.class);
 
         explorer.keyFound(key, location);
+    }
+
+    private void exitReached(HttpServletRequest request)
+    {
+        Coordinate location = GSON.fromJson(request.getParameter("location"), Coordinate.class);
+        explorer.exitReached(location);
     }
 
     private void exitMaze()

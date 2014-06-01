@@ -67,6 +67,11 @@ function Explorer()
         });
     };
 
+    this.exitReached = function exitReached(location)
+    {
+        return $.post(urlRoot + "explorer/exitReached", {location: JSON.stringify(location)});
+    };
+
     this.exitMaze = function exitMaze()
     {
         LOG.updateLog(explorerName + " is exiting the maze");

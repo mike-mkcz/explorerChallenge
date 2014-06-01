@@ -32,7 +32,7 @@ public class LeftHandWallExplorer implements Explorer
     @Override
     public void exitMaze()
     {
-        LOGGER.info("How the hell did I do that?");
+        LOGGER.info("Sweet!");
     }
 
     @Override
@@ -70,8 +70,21 @@ public class LeftHandWallExplorer implements Explorer
     @Override
     public Key getKey()
     {
-        LOGGER.info("Lucky I saved that key");
+        if(key != null)
+        {
+            LOGGER.info("Lucky I saved that key");
+        }
+        else
+        {
+            LOGGER.info("Hmmm, I haven't found a key yet");
+        }
         return key;
+    }
+
+    @Override
+    public void exitReached(Coordinate location)
+    {
+        LOGGER.info("Ok, so the exit is at " + location);
     }
 
     /*

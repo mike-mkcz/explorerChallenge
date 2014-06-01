@@ -54,4 +54,10 @@ public class StupidExplorer implements Explorer
         LOGGER.info("Oh Noes I lost my key");
         return null;
     }
+
+    @Override
+    public void exitReached(Coordinate location)
+    {
+        LOGGER.info("The exit is at " + location + ". Or is it, what, wait, where am I?");
+    }
 }

@@ -10,8 +10,6 @@ public interface Explorer
 
     void enterMaze(Coordinate startLocation);
 
-    void exitMaze();
-
     Direction whichWayNow(Coordinate fromLocation, Direction[] availableDirections);
 
     void move(Coordinate fromLocation, Coordinate toLocation);
@@ -19,4 +17,8 @@ public interface Explorer
     void keyFound(Key key, Coordinate location);
 
     Key getKey();
+
+    void exitReached(Coordinate location);
+
+    void exitMaze();
 }
