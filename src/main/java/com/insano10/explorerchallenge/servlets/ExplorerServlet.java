@@ -1,49 +1,45 @@
 package com.insano10.explorerchallenge.servlets;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.insano10.explorerchallenge.explorer.Explorer;
 import com.insano10.explorerchallenge.explorer.LeftHandWallExplorer;
-import com.insano10.explorerchallenge.maze.Coordinate;
-import com.insano10.explorerchallenge.maze.Direction;
-import com.insano10.explorerchallenge.maze.Key;
+import com.insano10.explorerchallenge.session.ExplorerSession;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ExplorerServlet extends HttpServlet
 {
-    private static final Gson GSON = new GsonBuilder().create();
+    private final Map<String, ExplorerSession> sessions = new HashMap<>();
 
-    private Explorer explorer;
-
-    @Override
-    public void init() throws ServletException
+    private Explorer createExplorer()
     {
-        super.init();
-        explorer = new LeftHandWallExplorer();
+        return new LeftHandWallExplorer();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        ExplorerSession explorerSession = getExplorerSession(request);
+
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
 
         if (request.getPathInfo().equals("/whichWayNow"))
         {
-            whichWay(request, response);
+            explorerSession.whichWay(request, response);
         }
         else if (request.getPathInfo().equals("/name"))
         {
-            getName(response);
+            explorerSession.getName(response);
         }
         else if (request.getPathInfo().equals("/key"))
         {
-            getKey(response);
+            explorerSession.getKey(response);
         }
         else
         {
@@ -54,25 +50,27 @@ public class ExplorerServlet extends HttpServlet
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        ExplorerSession explorerSession = getExplorerSession(request);
+
         if (request.getPathInfo().equals("/enterMaze"))
         {
-            enterMaze(request);
+            explorerSession.enterMaze(request);
         }
         else if (request.getPathInfo().equals("/move"))
         {
-            doMove(request);
+            explorerSession.doMove(request);
         }
         else if (request.getPathInfo().equals("/key"))
         {
-            keyFound(request);
+            explorerSession.keyFound(request);
         }
         else if (request.getPathInfo().equals("/exitReached"))
         {
-            exitReached(request);
+            explorerSession.exitReached(request);
         }
         else if (request.getPathInfo().equals("/exitMaze"))
         {
-            exitMaze();
+            explorerSession.exitMaze();
         }
         else
         {
@@ -80,54 +78,16 @@ public class ExplorerServlet extends HttpServlet
         }
     }
 
-    private void whichWay(HttpServletRequest request, HttpServletResponse response) throws IOException
+    private ExplorerSession getExplorerSession(HttpServletRequest request)
     {
-        Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
-        Direction[] availableDirections = GSON.fromJson(request.getParameter("availableDirections"), Direction[].class);
+        String sessionId = request.getParameter(Constants.SESSION_ID);
+        ExplorerSession explorerSession = sessions.get(sessionId);
 
-        response.getWriter().println(GSON.toJson(explorer.whichWayNow(fromLocation, availableDirections)));
-    }
-
-    private void getName(HttpServletResponse response) throws IOException
-    {
-        response.getWriter().println(GSON.toJson(explorer.getName()));
-    }
-
-    private void getKey(HttpServletResponse response) throws IOException
-    {
-        response.getWriter().println(GSON.toJson(explorer.getKey()));
-    }
-
-    private void enterMaze(HttpServletRequest request)
-    {
-        Coordinate entrance = GSON.fromJson(request.getParameter("entrance"), Coordinate.class);
-        explorer.enterMaze(entrance);
-    }
-
-    private void doMove(HttpServletRequest request)
-    {
-        Coordinate fromLocation = GSON.fromJson(request.getParameter("fromLocation"), Coordinate.class);
-        Coordinate toLocation = GSON.fromJson(request.getParameter("toLocation"), Coordinate.class);
-
-        explorer.move(fromLocation, toLocation);
-    }
-
-    private void keyFound(HttpServletRequest request)
-    {
-        Coordinate location = GSON.fromJson(request.getParameter("location"), Coordinate.class);
-        Key key = GSON.fromJson(request.getParameter("key"), Key.class);
-
-        explorer.keyFound(key, location);
-    }
-
-    private void exitReached(HttpServletRequest request)
-    {
-        Coordinate location = GSON.fromJson(request.getParameter("location"), Coordinate.class);
-        explorer.exitReached(location);
-    }
-
-    private void exitMaze()
-    {
-        explorer.exitMaze();
+        if(explorerSession == null)
+        {
+            explorerSession = new ExplorerSession(createExplorer());
+            sessions.put(sessionId, explorerSession);
+        }
+        return explorerSession;
     }
 }

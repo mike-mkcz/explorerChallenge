@@ -1,10 +1,11 @@
 
-function Maze()
+function Maze(sessionId)
 {
     /*
         PRIVATE
      */
 
+    var id = sessionId;
     var key = null;
     var keyLocation = null;
     var keyFound = false;
@@ -21,7 +22,7 @@ function Maze()
     this.attemptMazeMove = function attemptMazeMove(fromLocation, direction)
     {
         LOG.updateLog("Can I move " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation) + "?");
-        return $.post( "maze/move", {fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)}, function( outcome )
+        return $.post( "maze/move", {id: id, fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)}, function( outcome )
         {
             var outcomeJson = $.parseJSON(outcome);
 
@@ -37,7 +38,7 @@ function Maze()
    this.getEntrance = function getEntrance()
     {
         LOG.updateLog("Finding entrance...");
-        return $.getJSON( "maze/entrance", function( data )
+        return $.getJSON( "maze/entrance", {id: id}, function( data )
         {
             LOG.updateLog("entrance is at [" + data.x + "," + data.y + "]");
         });
@@ -46,7 +47,7 @@ function Maze()
     this.getAvailableExits = function getAvailableExits(location)
     {
         LOG.updateLog("What exits are available from " + JSON.stringify(location) + "?");
-        return $.getJSON( "maze/exits", {fromLocation: JSON.stringify(location)}, function( data )
+        return $.getJSON( "maze/exits", {id: id, fromLocation: JSON.stringify(location)}, function( data )
         {
             var exitString = "";
             $.each(data, function( index, value ) {
@@ -59,7 +60,7 @@ function Maze()
 
     this.getMazes = function getMazes()
     {
-        return $.getJSON( "maze/mazes", function(data)
+        return $.getJSON( "maze/mazes", {id: id}, function(data)
         {
             $('.maze-list').empty();
             $.each(data, function(index, value) {
@@ -81,7 +82,7 @@ function Maze()
     this.setMaze = function setMaze(mazeName)
     {
         LOG.updateLog("loading maze " + mazeName);
-        return $.post( "maze/maze", {file: mazeName}, function(mazeDefinition)
+        return $.post( "maze/maze", {id: id, file: mazeName}, function(mazeDefinition)
         {
             $(".current-maze").val(mazeName);
             $(".traversalButton").attr("disabled", "disabled");
