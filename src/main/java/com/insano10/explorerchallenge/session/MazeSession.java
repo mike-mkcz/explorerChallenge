@@ -6,21 +6,13 @@ import com.insano10.explorerchallenge.maze.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 
 public class MazeSession
 {
     private static final Gson GSON = new GsonBuilder().create();
 
-    private MazeFileLoader mazeLoader = new MazeFileLoader();
-    private String mapRoot;
     private Maze maze;
-
-    public MazeSession(String mapRoot)
-    {
-        this.mapRoot = mapRoot;
-    }
 
     public void getExitsFromLocation(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
@@ -61,9 +53,7 @@ public class MazeSession
 
     private Maze loadMaze(String fileName) throws IOException
     {
-        File mazeFile = new File(mapRoot + fileName);
-
-        return mazeLoader.loadFromFile(mazeFile);
+        return EmbeddedMazeProvider.getMaze(fileName);
     }
 
 

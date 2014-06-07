@@ -5,6 +5,8 @@ public class Coordinate
     private int x;
     private int y;
 
+    public Coordinate() {}
+
     public static Coordinate create(int x, int y)
     {
         return new Coordinate(x, y);

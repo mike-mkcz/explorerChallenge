@@ -15,7 +15,7 @@ function Explorer(sessionId)
 
     this.setExplorerHost = function setExplorerHost(chosenHost)
     {
-        urlRoot = "http://" + chosenHost + ":8080/explorerchallenge/";
+        urlRoot = "";
     };
 
     this.whichWay = function whichWay(fromLocation, availableDirections)
