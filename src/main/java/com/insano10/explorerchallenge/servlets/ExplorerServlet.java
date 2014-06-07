@@ -1,7 +1,7 @@
 package com.insano10.explorerchallenge.servlets;
 
 import com.insano10.explorerchallenge.explorer.Explorer;
-import com.insano10.explorerchallenge.explorer.LeftHandWallExplorer;
+import com.insano10.explorerchallenge.explorer.StupidExplorer;
 import com.insano10.explorerchallenge.session.ExplorerSession;
 
 import javax.servlet.ServletException;
@@ -18,7 +18,7 @@ public class ExplorerServlet extends HttpServlet
 
     private Explorer createExplorer()
     {
-        return new LeftHandWallExplorer();
+        return new StupidExplorer();
     }
 
     @Override
