@@ -1,9 +1,0 @@
-width=5
-height=4
-entrance=4,2
-exit=0,3
-#maze
-!11111
-!10101
-!10101
-!11111
