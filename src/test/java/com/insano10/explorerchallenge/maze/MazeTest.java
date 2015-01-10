@@ -4,6 +4,8 @@ import com.insano10.explorerchallenge.maze.utils.TestMazes;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -55,10 +57,9 @@ public class MazeTest
         Direction[] exits = maze.getExitsFrom(location);
 
         assertThat(exits.length, equalTo(2));
-        assertThat(exits[0], equalTo(Direction.SOUTH));
-        assertThat(exits[1], equalTo(Direction.WEST));
+        assertTrue(Arrays.asList(exits).contains(Direction.SOUTH));
+        assertTrue(Arrays.asList(exits).contains(Direction.WEST));
     }
-
 
     @Test
     public void shouldRecogniseExit()
