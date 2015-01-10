@@ -7,7 +7,7 @@ function Log()
 
         var logScroll = document.getElementById("log-scroll");
         logScroll.scrollTop = logScroll.scrollHeight;
-    }
+    };
 
     this.clear = function clear()
     {
