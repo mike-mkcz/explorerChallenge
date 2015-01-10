@@ -4,16 +4,22 @@ function Log(disableLog)
 
     this.storeLog = function storeLog(contentLine)
     {
-        logLine += "<p style='padding-left: 10px; margin:0'>" + contentLine + "</p>";
+        if(!disableLog)
+        {
+            logLine += "<p style='padding-left: 10px; margin:0'>" + contentLine + "</p>";
+        }
     };
 
     this.writeLog = function writeLog()
     {
-        $("#log-scroll").append(logLine);
-        logLine = "";
+        if(!disableLog)
+        {
+            $("#log-scroll").append(logLine);
+            logLine = "";
 
-        var logScroll = document.getElementById("log-scroll");
-        logScroll.scrollTop = logScroll.scrollHeight;
+            var logScroll = document.getElementById("log-scroll");
+            logScroll.scrollTop = logScroll.scrollHeight;
+        }
     };
 
     this.clear = function clear()
