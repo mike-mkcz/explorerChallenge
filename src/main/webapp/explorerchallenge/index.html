@@ -31,14 +31,22 @@
                     <input type="text" class="form-control current-maze" readonly>
                 </div>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-3 maze-control-buttons-container">
                 <a class="btn btn-primary" role="button" onclick="DRIVER.startMaze()">Restart Maze</a>
-            </div>
-            <div class="col-md-2 speed-button-container">
-                <a class="btn btn-primary traversalButton" role="button" onclick="DRIVER.changeSpeed(100)"><<</a>
-                <a id="goButton" class="btn btn-primary traversalButton" role="button" onclick="DRIVER.startMoving()">Go</a>
-                <a id="pauseButton" class="btn btn-primary traversalButton" role="button" onclick="DRIVER.stopMoving()">Pause</a>
-                <a class="btn btn-primary traversalButton" role="button" onclick="DRIVER.changeSpeed(-100)">>></a>
+                <a id="goButton" class="btn btn-primary" role="button" onclick="DRIVER.startMoving()">Go</a>
+                <a id="pauseButton" class="btn btn-primary" role="button" onclick="DRIVER.stopMoving()">Pause</a>
+
+                <div class="speed-button-container">
+                    <div class="speed-label">
+                        Speed
+                    </div>
+                    <div>
+                        <a class="btn btn-primary traversalButton" role="button" onclick="DRIVER.setSpeed('slow')">slow</a>
+                        <a class="btn btn-primary traversalButton" role="button" onclick="DRIVER.setSpeed('normal')">normal</a>
+                        <a class="btn btn-primary traversalButton" role="button" onclick="DRIVER.setSpeed('fast')">fast</a>
+                    </div>
+
+                </div>
             </div>
             <div class="col-md-5">
                 <div class="move-count-container move-count">Moves: <span class="move-count-value move-count"></span></div>

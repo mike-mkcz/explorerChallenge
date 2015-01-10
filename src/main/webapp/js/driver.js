@@ -9,7 +9,7 @@ function Driver(theExplorer, theGraphics, theMaze)
     var maze = theMaze;
     var explorerLocation = null;
     var isMoving = false;
-    var defaultMoveDelayMs = 500;
+    var defaultMoveDelayMs = 200;
     var moveDelayMs = defaultMoveDelayMs;
     var totalMoves = 0;
     var failedMoveCount = 0;
@@ -243,10 +243,20 @@ function Driver(theExplorer, theGraphics, theMaze)
         isMoving = false;
     };
 
-    this.changeSpeed = function changeSpeed(delta)
+    this.setSpeed = function setSpeed(speed)
     {
-        moveDelayMs += delta;
-        moveDelayMs = Math.max(0, moveDelayMs);
-    }
+        if(speed == "slow")
+        {
+            moveDelayMs = 500;
+        }
+        else if(speed == "normal")
+        {
+            moveDelayMs = 300;
+        }
+        else if(speed == "fast")
+        {
+            moveDelayMs = 0;
+        }
+    };
 }
 
