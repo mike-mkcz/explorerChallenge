@@ -6,7 +6,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.unitils.reflectionassert.ReflectionAssert;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MazeFileLoaderTest
 {
@@ -18,10 +19,10 @@ public class MazeFileLoaderTest
     @Test
     public void shouldLoadMazeOneFromFile() throws Exception
     {
-        File mazeFile = new File("src/test/resources/mazes/one.maze");
+        Path filePath = Paths.get("src/test/resources/mazes/one.maze");
         Maze expectedMaze = TestMazes.testMazeOne();
 
-        Maze maze = fileLoader.loadFromFile(mazeFile);
+        Maze maze = fileLoader.loadFromFile(filePath);
 
         ReflectionAssert.assertReflectionEquals(expectedMaze, maze);
     }
@@ -29,10 +30,10 @@ public class MazeFileLoaderTest
     @Test
     public void shouldLoadMazeTwoFromFile() throws Exception
     {
-        File mazeFile = new File("src/test/resources/mazes/two.maze");
+        Path filePath = Paths.get("src/test/resources/mazes/two.maze");
         Maze expectedMaze = TestMazes.testMazeTwo();
 
-        Maze maze = fileLoader.loadFromFile(mazeFile);
+        Maze maze = fileLoader.loadFromFile(filePath);
 
         ReflectionAssert.assertReflectionEquals(expectedMaze, maze);
     }
@@ -40,10 +41,10 @@ public class MazeFileLoaderTest
     @Test
     public void shouldLoadMazeWithWhitespaceInCoordinates() throws Exception
     {
-        File mazeFile = new File("src/test/resources/mazes/coordinatesWithWhiteSpace.maze");
+        Path filePath = Paths.get("src/test/resources/mazes/coordinatesWithWhiteSpace.maze");
         Maze expectedMaze = TestMazes.testMazeWithWhiteSpace();
 
-        Maze maze = fileLoader.loadFromFile(mazeFile);
+        Maze maze = fileLoader.loadFromFile(filePath);
 
         ReflectionAssert.assertReflectionEquals(expectedMaze, maze);
     }
@@ -53,8 +54,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Invalid width specified on line 1");
         
-        File mazeFile = new File("src/test/resources/mazes/badWidth.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badWidth.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -62,8 +63,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Invalid height specified on line 2");
 
-        File mazeFile = new File("src/test/resources/mazes/badHeight.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badHeight.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -71,8 +72,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Invalid entrance specified on line 3");
 
-        File mazeFile = new File("src/test/resources/mazes/badEntrance.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badEntrance.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -80,8 +81,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Invalid exit specified on line 4");
 
-        File mazeFile = new File("src/test/resources/mazes/badExit.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badExit.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -89,8 +90,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Gridline 3 is not of width 5");
 
-        File mazeFile = new File("src/test/resources/mazes/badGridWidth.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badGridWidth.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -98,8 +99,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Defined grid should be height 5");
 
-        File mazeFile = new File("src/test/resources/mazes/badGridHeight.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badGridHeight.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -107,8 +108,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Grid contains invalid character: A");
 
-        File mazeFile = new File("src/test/resources/mazes/badGridSymbol.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badGridSymbol.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -116,8 +117,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Entrance is not within the maze");
 
-        File mazeFile = new File("src/test/resources/mazes/badGridEntranceCoords.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badGridEntranceCoords.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -125,8 +126,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Exit is not within the maze");
 
-        File mazeFile = new File("src/test/resources/mazes/badGridExitCoords.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badGridExitCoords.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -134,8 +135,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Failed to read key on line 5. Should be of format 'key=PASSWORD@0,0'");
 
-        File mazeFile = new File("src/test/resources/mazes/badKey.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/badKey.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -143,8 +144,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Invalid content found on line 6");
 
-        File mazeFile = new File("src/test/resources/mazes/multipleKeys.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/multipleKeys.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     @Test
@@ -152,8 +153,8 @@ public class MazeFileLoaderTest
     {
         assertRuntimeException("Invalid content found on line 9");
 
-        File mazeFile = new File("src/test/resources/mazes/invalidMazeContent.maze");
-        fileLoader.loadFromFile(mazeFile);
+        Path filePath = Paths.get("src/test/resources/mazes/invalidMazeContent.maze");
+        fileLoader.loadFromFile(filePath);
     }
 
     private void assertRuntimeException(String message)

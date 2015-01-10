@@ -9,8 +9,9 @@ var generateId = function(){
     });
 };
 
+var disableLog = false;
 var SESSION_ID = generateId();
-var LOG = new Log();
+var LOG = new Log(disableLog);
 var DRIVER = new Driver(new Explorer(SESSION_ID), new Graphics(), new Maze(SESSION_ID));
 
 $( document ).ready(function() {

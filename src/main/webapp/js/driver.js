@@ -9,7 +9,7 @@ function Driver(theExplorer, theGraphics, theMaze)
     var maze = theMaze;
     var explorerLocation = null;
     var isMoving = false;
-    var defaultMoveDelayMs = 500;
+    var defaultMoveDelayMs = 200;
     var moveDelayMs = defaultMoveDelayMs;
     var totalMoves = 0;
     var failedMoveCount = 0;
@@ -67,7 +67,7 @@ function Driver(theExplorer, theGraphics, theMaze)
                 totalMoves++;
                 graphics.drawExplorerLocation(explorerLocation, theMoveOutcome.location);
                 explorerLocation = theMoveOutcome.location;
-                LOG.updateLog("-------------------------");
+                LOG.storeLog("-------------------------");
                 updateTotalMoves();
 
                 if(theMoveOutcome.exitReached)
@@ -83,8 +83,8 @@ function Driver(theExplorer, theGraphics, theMaze)
             })
             .fail(function fail(err)
             {
-                LOG.updateLog("Failed to move " + JSON.stringify(theChosenDirection) + " from " + JSON.stringify(explorerLocation));
-                LOG.updateLog("-------------------------");
+                LOG.storeLog("Failed to move " + JSON.stringify(theChosenDirection) + " from " + JSON.stringify(explorerLocation));
+                LOG.storeLog("-------------------------");
                 failedMoveCount++;
                 nextMove();
             });
@@ -92,7 +92,7 @@ function Driver(theExplorer, theGraphics, theMaze)
 
     var attemptToExitMaze = function attemptToExitMaze(location)
     {
-        LOG.updateLog("Exit reached!");
+        LOG.storeLog("Exit reached!");
 
         explorer.exitReached(location);
 
@@ -103,12 +103,12 @@ function Driver(theExplorer, theGraphics, theMaze)
                 {
                     if(maze.canExitWithKey(key))
                     {
-                        LOG.updateLog("Exiting maze with key");
+                        LOG.storeLog("Exiting maze with key");
                         exitMaze();
                     }
                     else
                     {
-                        LOG.updateLog("Failed to exit maze without the required key");
+                        LOG.storeLog("Failed to exit maze without the required key");
                         nextMove();
                     }
                 });
@@ -132,14 +132,16 @@ function Driver(theExplorer, theGraphics, theMaze)
 
     var nextMove = function nextMove()
     {
+        LOG.writeLog();
+
         if(failedMoveCount < 5)
         {
             setTimeout(moveCycle, moveDelayMs);
         }
         else
         {
-            LOG.updateLog("You appear to be stuck at " + JSON.stringify(explorerLocation));
-            LOG.updateLog("GAME OVER");
+            LOG.storeLog("You appear to be stuck at " + JSON.stringify(explorerLocation));
+            LOG.storeLog("GAME OVER");
             endMazeTraversal();
         }
     };
@@ -217,10 +219,11 @@ function Driver(theExplorer, theGraphics, theMaze)
 
             explorerLocation = mazeEntrance;
             graphics.drawExplorerLocation(mazeEntrance, mazeEntrance);
+            LOG.writeLog();
         })
         .fail(function()
         {
-            LOG.updateLog("startMaze() failed");
+            LOG.storeLog("startMaze() failed");
         })
         .done();
     };
@@ -240,10 +243,20 @@ function Driver(theExplorer, theGraphics, theMaze)
         isMoving = false;
     };
 
-    this.changeSpeed = function changeSpeed(delta)
+    this.setSpeed = function setSpeed(speed)
     {
-        moveDelayMs += delta;
-        moveDelayMs = Math.max(0, moveDelayMs);
-    }
+        if(speed == "slow")
+        {
+            moveDelayMs = 500;
+        }
+        else if(speed == "normal")
+        {
+            moveDelayMs = 300;
+        }
+        else if(speed == "fast")
+        {
+            moveDelayMs = 0;
+        }
+    };
 }
 

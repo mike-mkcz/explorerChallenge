@@ -1,6 +1,7 @@
 package com.insano10.explorerchallenge.maze;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Maze
@@ -115,6 +116,7 @@ public class Maze
             exits.add(Direction.WEST);
         }
 
+        Collections.shuffle(exits);
         return exits.toArray(new Direction[exits.size()]);
     }
 

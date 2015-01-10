@@ -22,8 +22,8 @@
     background-color: #ffffff;
 }
 
-.speed-button-container {
-    width: 200px;
+.maze-control-buttons-container {
+    width: 400px;
 }
 
 .hidden {
@@ -39,7 +39,7 @@
     background-color: #ffffff;
     padding-top: 5px;
     padding-left:15px;
-    margin-left: 70px;
+    margin-left: 25px;
 }
 
 .move-count {
@@ -49,5 +49,23 @@
 
 .explorer-host-container {
     width: 400px;
-    margin-left: 255px;
+    margin-left: 205px;
+}
+
+.traversalButton {
+    padding: 2px 4px;
+}
+
+.speed-button-container {
+    float: right;
+    text-align: right;
+    padding: 5px;
+    margin-top: -10px;
+    background-color: #24688f;
+    border-radius: 5px;
+}
+
+.speed-label {
+    text-align: center;
+    color: #eeeeee;
 }
