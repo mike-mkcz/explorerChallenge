@@ -1,4 +1,3 @@
-
 function Maze(sessionId)
 {
     /*
@@ -21,39 +20,39 @@ function Maze(sessionId)
 
     this.attemptMazeMove = function attemptMazeMove(fromLocation, direction)
     {
-        LOG.updateLog("Can I move " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation) + "?");
+        LOG.storeLog("Can I move " + JSON.stringify(direction) + " from " + JSON.stringify(fromLocation) + "?");
         return $.post( "maze/move", {id: id, fromLocation: JSON.stringify(fromLocation), direction: JSON.stringify(direction)}, function( outcome )
         {
             var outcomeJson = $.parseJSON(outcome);
 
-            LOG.updateLog("Valid move!, New location is [" + outcomeJson.location.x + "," + outcomeJson.location.y + "]");
+            LOG.storeLog("Valid move!, New location is [" + outcomeJson.location.x + "," + outcomeJson.location.y + "]");
 
             if(outcomeJson.exit)
             {
-                LOG.updateLog("exit reached");
+                LOG.storeLog("exit reached");
             }
         });
     };
 
    this.getEntrance = function getEntrance()
     {
-        LOG.updateLog("Finding entrance...");
+        LOG.storeLog("Finding entrance...");
         return $.getJSON( "maze/entrance", {id: id}, function( data )
         {
-            LOG.updateLog("entrance is at [" + data.x + "," + data.y + "]");
+            LOG.storeLog("entrance is at [" + data.x + "," + data.y + "]");
         });
     };
 
     this.getAvailableExits = function getAvailableExits(location)
     {
-        LOG.updateLog("What exits are available from " + JSON.stringify(location) + "?");
+        LOG.storeLog("What exits are available from " + JSON.stringify(location) + "?");
         return $.getJSON( "maze/exits", {id: id, fromLocation: JSON.stringify(location)}, function( data )
         {
             var exitString = "";
             $.each(data, function( index, value ) {
                 exitString += value + " ";
             });
-            LOG.updateLog("exits available [" +exitString + "]");
+            LOG.storeLog("exits available [" +exitString + "]");
 
         });
     };
@@ -81,7 +80,7 @@ function Maze(sessionId)
 
     this.setMaze = function setMaze(mazeName)
     {
-        LOG.updateLog("loading maze " + mazeName);
+        LOG.storeLog("loading maze " + mazeName);
         return $.post( "maze/maze", {id: id, file: mazeName}, function(mazeDefinition)
         {
             $(".current-maze").val(mazeName);

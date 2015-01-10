@@ -1,9 +1,16 @@
-
-function Log()
+function Log(disableLog)
 {
-    this.updateLog = function updateLog(contentLine)
+    var logLine = "";
+
+    this.storeLog = function storeLog(contentLine)
     {
-        $("#log-scroll").append("<p style='padding-left: 10px; margin:0'>" + contentLine + "</p>");
+        logLine += "<p style='padding-left: 10px; margin:0'>" + contentLine + "</p>";
+    };
+
+    this.writeLog = function writeLog()
+    {
+        $("#log-scroll").append(logLine);
+        logLine = "";
 
         var logScroll = document.getElementById("log-scroll");
         logScroll.scrollTop = logScroll.scrollHeight;
@@ -11,6 +18,7 @@ function Log()
 
     this.clear = function clear()
     {
+        logLine = "";
         $("#log-scroll").html("");
     }
 }
