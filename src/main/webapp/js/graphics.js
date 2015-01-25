@@ -21,6 +21,8 @@ function Graphics()
     var exitSprite = null;
     var keySprite = null;
     var keyFoundSprite = null;
+    var currentExplorerLocations = {};
+    var explorerNames = {};
 
     var drawMazeToContext = function drawMazeToContext(mazeDefinition, ctx)
     {
@@ -105,6 +107,9 @@ function Graphics()
 
         mazeXOffsetPx = (mazeCanvasWidth - (mazeWidthPx*scale))/2;
         mazeYOffsetPx = (mazeCanvasHeight - (mazeHeightPx*scale))/2;
+
+        currentExplorerLocations = {};
+        explorerNames = {};
     };
 
     this.redrawCurrentMaze = function redrawCurrentMaze()
@@ -123,8 +128,11 @@ function Graphics()
         drawMazeToContext(mazeDefinition, mazeCanvasOutput.getContext("2d"));
     };
 
-    this.drawExplorerLocation = function drawExplorerLocation(oldLocation, newLocation)
+    this.drawExplorerLocation = function drawExplorerLocation(explorer, oldLocation, newLocation)
     {
+        currentExplorerLocations[explorer.getId()] = newLocation;
+        explorerNames[explorer.getId()] = explorer.toString();
+
         var mazeCanvas = document.getElementById("maze-canvas-back");
         var ctx = mazeCanvas.getContext("2d");
 
@@ -145,7 +153,15 @@ function Graphics()
 
         outputCtx.save();
         outputCtx.scale(scale, scale);
-        outputCtx.drawImage(explorerSprite, absoluteXCoordinatePx(newLocation.x)+3, absoluteYCoordinatePx(newLocation.y));
+
+        $.each(currentExplorerLocations, function(key, currentLocation)
+        {
+            outputCtx.font = "bold 8pt Courier";
+            outputCtx.fillStyle = "#FFFFFF";
+            outputCtx.fillText(explorerNames[key], absoluteXCoordinatePx(currentLocation.x)+3, absoluteYCoordinatePx(currentLocation.y) - 10);
+            outputCtx.drawImage(explorerSprite, absoluteXCoordinatePx(currentLocation.x)+3, absoluteYCoordinatePx(currentLocation.y));
+        });
+
         outputCtx.restore();
     };
 

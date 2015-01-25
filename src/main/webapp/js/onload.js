@@ -9,17 +9,13 @@ function generateId(){
     });
 }
 
-function createExplorer(host)
-{
-    return new Explorer(generateId(), host);
-}
-
 var disableLog = false;
 var SESSION_ID = generateId();
 var LOG = new Log(disableLog);
-var explorers = [];
-explorers.push(createExplorer("127.0.0.1"));
-var DRIVER = new Driver(explorers, new Graphics(), new Maze(SESSION_ID));
+
+var explorerHostList = [];
+explorerHostList.push("127.0.0.1:8080");
+var DRIVER = new Driver(explorerHostList, new Graphics(), new Maze(SESSION_ID));
 
 $( document ).ready(function() {
 
