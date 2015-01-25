@@ -1,4 +1,4 @@
-function Explorer(sessionId)
+function Explorer(sessionId, host)
 {
     /*
         PRIVATE
@@ -6,17 +6,20 @@ function Explorer(sessionId)
 
     var id = sessionId;
     var explorerName = '';
+    var failedMoveCount = 0;
 
-    var urlRoot = '';
+    var urlRoot = "http://" + host + ":8080/explorerchallenge/";
+    var currentLocation = null;
+    var hasReachedExit = false;
+
+    var setCurrentLocation = function setCurrentLocation(location)
+    {
+        currentLocation = location;
+    };
 
     /*
         PRIVILEGED
      */
-
-    this.setExplorerHost = function setExplorerHost(chosenHost)
-    {
-        urlRoot = "http://" + chosenHost + ":8080/explorerchallenge/";
-    };
 
     this.whichWay = function whichWay(fromLocation, availableDirections)
     {
@@ -27,7 +30,7 @@ function Explorer(sessionId)
         });
     };
 
-    this.getName = function getName()
+    this.retrieveName = function retrieveName()
     {
         return $.getJSON(urlRoot + "explorer/name", {id: id}, function( name )
         {
@@ -39,18 +42,27 @@ function Explorer(sessionId)
             {
                 explorerName = "UNKNOWN";
             }
-            LOG.storeLog("Explorer entering the maze is " + explorerName);
         });
+    };
+
+    this.getCurrentLocation = function getCurrentLocation()
+    {
+        return currentLocation;
     };
 
     this.enterMaze = function enterMaze(location)
     {
         LOG.storeLog(explorerName + " is entering the maze");
+        setCurrentLocation(location);
+        hasReachedExit = false;
+        failedMoveCount = 0;
         return $.post(urlRoot + "explorer/enterMaze", {id: id, entrance: JSON.stringify(location)});
     };
 
-    this.moveExplorer = function moveExplorer(fromLocation, toLocation)
+    this.moveExplorer = function moveExplorer(toLocation)
     {
+        var fromLocation = this.getCurrentLocation();
+        setCurrentLocation(toLocation);
         LOG.storeLog(explorerName + " is moving from " + JSON.stringify(fromLocation) + " to " + JSON.stringify(toLocation));
         return $.post(urlRoot + "explorer/move", {id: id, fromLocation: JSON.stringify(fromLocation), toLocation: JSON.stringify(toLocation)});
     };
@@ -76,9 +88,37 @@ function Explorer(sessionId)
 
     this.exitMaze = function exitMaze()
     {
+        hasReachedExit = true;
         LOG.storeLog(explorerName + " is exiting the maze");
         $.post(urlRoot + "explorer/exitMaze", {id: id});
     };
+
+    this.moveSuccessful = function moveSuccessful()
+    {
+        failedMoveCount = 0;
+    };
+
+    this.moveFailed = function moveFailed()
+    {
+        failedMoveCount++;
+    };
+
+    this.shouldContinueTraversal = function shouldContinueTraversal()
+    {
+        return failedMoveCount < 5 && !hasReachedExit;
+    };
+
+    this.toString = function toString()
+    {
+        var status = explorerName;
+
+        if(failedMoveCount >= 5)
+        {
+            status += ". And he's stuck at " + JSON.stringify(this.getCurrentLocation());
+
+        }
+        return status;
+    }
 }
 
 
