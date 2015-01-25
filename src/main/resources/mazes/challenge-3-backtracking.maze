@@ -2,7 +2,7 @@ width=13
 height=10
 entrance=0,6
 exit=2,6
-key=BACKTRACK@3,6
+key=BACKTRACK@4,6
 #maze
 !0000000000000
 !0000000000000
