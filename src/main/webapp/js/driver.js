@@ -1,18 +1,16 @@
-function Driver(theExplorer, theGraphics, theMaze)
+function Driver(explorers, theGraphics, theMaze)
 {
     /*
         PRIVATE
      */
 
-    var explorer = theExplorer;
+    var explorerArray = explorers;
     var graphics = theGraphics;
     var maze = theMaze;
-    var explorerLocation = null;
     var isMoving = false;
     var defaultMoveDelayMs = 200;
     var moveDelayMs = defaultMoveDelayMs;
     var totalMoves = 0;
-    var failedMoveCount = 0;
 
     var startMazeTraversal = function startMazeTraversal()
     {
@@ -26,7 +24,7 @@ function Driver(theExplorer, theGraphics, theMaze)
         $(".move-count-value").html(totalMoves);
     };
 
-    var moveCycle = function moveCycle()
+    var moveCycle = function moveCycle(explorer)
     {
         if(!isMoving)
         {
@@ -35,21 +33,22 @@ function Driver(theExplorer, theGraphics, theMaze)
 
         var theChosenDirection = null;
         var theMoveOutcome = null;
+        var currentLocation = explorer.getCurrentLocation();
 
-        maze.getAvailableExits(explorerLocation)
+        return maze.getAvailableExits(explorer.getCurrentLocation())
             .then(function afterExits(exits)
             {
-                return explorer.whichWay(explorerLocation, exits);
+                return explorer.whichWay(explorer.getCurrentLocation(), exits);
             })
             .then(function afterWhichWay(chosenDirection)
             {
                 theChosenDirection = chosenDirection;
-                return maze.attemptMazeMove(explorerLocation, chosenDirection);
+                return maze.attemptMazeMove(explorer.getCurrentLocation(), chosenDirection);
             })
             .then(function afterAttemptMove(outcomeJSON)
             {
                 theMoveOutcome = $.parseJSON(outcomeJSON);
-                return explorer.moveExplorer(explorerLocation, theMoveOutcome.location);
+                return explorer.moveExplorer(theMoveOutcome.location);
             })
             .then(function afterMoveExplorer()
             {
@@ -65,32 +64,31 @@ function Driver(theExplorer, theGraphics, theMaze)
             .then(function afterMayFindKey()
             {
                 totalMoves++;
-                graphics.drawExplorerLocation(explorerLocation, theMoveOutcome.location);
-                explorerLocation = theMoveOutcome.location;
+                graphics.drawExplorerLocation(currentLocation, theMoveOutcome.location);
                 LOG.storeLog("-------------------------");
                 updateTotalMoves();
 
                 if(theMoveOutcome.exitReached)
                 {
-                    attemptToExitMaze(theMoveOutcome.location);
+                    attemptToExitMaze(explorer, theMoveOutcome.location);
                 }
                 else
                 {
-                    failedMoveCount = 0;
-                    nextMove();
+                    explorer.moveSuccessful();
+                    nextMove(explorer);
                 }
 
             })
             .fail(function fail(err)
             {
-                LOG.storeLog("Failed to move " + JSON.stringify(theChosenDirection) + " from " + JSON.stringify(explorerLocation));
+                LOG.storeLog("Failed to move " + JSON.stringify(theChosenDirection) + " from " + JSON.stringify(explorer.getCurrentLocation()));
                 LOG.storeLog("-------------------------");
-                failedMoveCount++;
-                nextMove();
+                explorer.moveFailed();
+                nextMove(explorer);
             });
     };
 
-    var attemptToExitMaze = function attemptToExitMaze(location)
+    var attemptToExitMaze = function attemptToExitMaze(explorer, location)
     {
         LOG.storeLog("Exit reached!");
 
@@ -104,22 +102,22 @@ function Driver(theExplorer, theGraphics, theMaze)
                     if(maze.canExitWithKey(key))
                     {
                         LOG.storeLog("Exiting maze with key");
-                        exitMaze();
+                        exitMaze(explorer);
                     }
                     else
                     {
                         LOG.storeLog("Failed to exit maze without the required key");
-                        nextMove();
+                        nextMove(explorer);
                     }
                 });
         }
         else
         {
-            exitMaze();
+            exitMaze(explorer);
         }
     };
 
-    var exitMaze = function exitMaze()
+    var exitMaze = function exitMaze(explorer)
     {
         explorer.exitMaze();
         endMazeTraversal();
@@ -128,21 +126,21 @@ function Driver(theExplorer, theGraphics, theMaze)
     var endMazeTraversal = function endMazeTraversal()
     {
         $(".traversalButton").attr("disabled", "disabled");
+        LOG.writeLog();
     };
 
-    var nextMove = function nextMove()
+    var nextMove = function nextMove(explorer)
     {
         LOG.writeLog();
 
-        if(failedMoveCount < 5)
+        if(explorer.shouldContinueTraversal())
         {
-            setTimeout(moveCycle, moveDelayMs);
+            setTimeout(function() {moveCycle(explorer);}, moveDelayMs);
         }
         else
         {
-            LOG.storeLog("You appear to be stuck at " + JSON.stringify(explorerLocation));
-            LOG.storeLog("GAME OVER");
-            endMazeTraversal();
+            LOG.storeLog("Traversal ended for " + explorer.toString());
+            LOG.writeLog();
         }
     };
 
@@ -180,17 +178,7 @@ function Driver(theExplorer, theGraphics, theMaze)
 
             graphics.drawMaze(mazeDefinitionObject);
             thisDriver.startMaze();
-        })
-        .then(function afterStartMaze()
-        {
-            thisDriver.setExplorerHost();
         });
-    };
-
-    this.setExplorerHost = function setExplorerHost()
-    {
-        var chosenHost = $("#explorer-host").val();
-        explorer.setExplorerHost(chosenHost);
     };
 
     this.startMaze = function startMaze()
@@ -199,33 +187,37 @@ function Driver(theExplorer, theGraphics, theMaze)
         var mazeEntrance = null;
         this.stopMoving();
         totalMoves = 0;
-        failedMoveCount = 0;
         maze.reset();
         updateTotalMoves();
 
-        explorer.getName()
-        .then(function afterGetName(name)
-        {
-            return maze.getEntrance();
-        })
+        maze.getEntrance()
         .then(function afterGetEntrance(location)
         {
             mazeEntrance = location;
-            return explorer.enterMaze(location);
-        })
-        .then(function afterEnterMaze()
-        {
             startMazeTraversal();
 
-            explorerLocation = mazeEntrance;
-            graphics.drawExplorerLocation(mazeEntrance, mazeEntrance);
-            LOG.writeLog();
+            $.each(explorerArray, function(idx, explorer) {
+
+                explorer.retrieveName()
+                .then(function afterRetrieveName()
+                {
+                    explorer.enterMaze(location)
+                })
+                .then(function afterEnterMaze()
+                {
+                    graphics.drawExplorerLocation(mazeEntrance, mazeEntrance);
+                    LOG.writeLog();
+                })
+                .fail(function()
+                {
+                    LOG.storeLog(explorer.toString() + " failed to enter the maze");
+                })
+            });
         })
         .fail(function()
         {
             LOG.storeLog("startMaze() failed");
-        })
-        .done();
+        });
     };
 
     this.startMoving = function startMoving()
@@ -233,7 +225,11 @@ function Driver(theExplorer, theGraphics, theMaze)
         $("#goButton").hide();
         $("#pauseButton").show();
         isMoving = true;
-        moveCycle();
+
+        $.each(explorerArray, function(idx, explorer)
+        {
+            moveCycle(explorer);
+        });
     };
 
     this.stopMoving = function stopMoving()
@@ -257,6 +253,8 @@ function Driver(theExplorer, theGraphics, theMaze)
         {
             moveDelayMs = 0;
         }
+        LOG.storeLog("Traversal speed set to '" + speed + "'");
+        LOG.writeLog();
     };
 }
 
