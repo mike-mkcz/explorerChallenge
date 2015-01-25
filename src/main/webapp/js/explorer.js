@@ -8,7 +8,7 @@ function Explorer(sessionId, host)
     var explorerName = '';
     var failedMoveCount = 0;
 
-    var urlRoot = "http://" + host + ":8080/explorerchallenge/";
+    var urlRoot = "http://" + host + "/explorerchallenge/";
     var currentLocation = null;
     var hasReachedExit = false;
 
@@ -106,6 +106,11 @@ function Explorer(sessionId, host)
     this.shouldContinueTraversal = function shouldContinueTraversal()
     {
         return failedMoveCount < 5 && !hasReachedExit;
+    };
+
+    this.getId = function getId()
+    {
+        return id;
     };
 
     this.toString = function toString()

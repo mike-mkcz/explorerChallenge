@@ -1,16 +1,33 @@
-function Driver(explorers, theGraphics, theMaze)
+function Driver(theExplorerHosts, theGraphics, theMaze)
 {
     /*
         PRIVATE
      */
 
-    var explorerArray = explorers;
     var graphics = theGraphics;
     var maze = theMaze;
     var isMoving = false;
     var defaultMoveDelayMs = 200;
     var moveDelayMs = defaultMoveDelayMs;
     var totalMoves = 0;
+
+    var generateId = function generateId(){
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    };
+
+    var createExplorers = function createExplorer(hosts)
+    {
+        var explorers = [];
+        $.each(hosts, function(idx, host)
+        {
+            explorers.push(new Explorer(generateId(), host));
+        });
+        return explorers;
+    };
+    var explorerArray = createExplorers(theExplorerHosts);
 
     var startMazeTraversal = function startMazeTraversal()
     {
@@ -64,7 +81,7 @@ function Driver(explorers, theGraphics, theMaze)
             .then(function afterMayFindKey()
             {
                 totalMoves++;
-                graphics.drawExplorerLocation(currentLocation, theMoveOutcome.location);
+                graphics.drawExplorerLocation(explorer, currentLocation, theMoveOutcome.location);
                 LOG.storeLog("-------------------------");
                 updateTotalMoves();
 
@@ -205,7 +222,7 @@ function Driver(explorers, theGraphics, theMaze)
                 })
                 .then(function afterEnterMaze()
                 {
-                    graphics.drawExplorerLocation(mazeEntrance, mazeEntrance);
+                    graphics.drawExplorerLocation(explorer, mazeEntrance, mazeEntrance);
                     LOG.writeLog();
                 })
                 .fail(function()
@@ -256,5 +273,12 @@ function Driver(explorers, theGraphics, theMaze)
         LOG.storeLog("Traversal speed set to '" + speed + "'");
         LOG.writeLog();
     };
+
+    this.updateExplorerHosts = function updateExplorerHosts()
+    {
+        var hostList = $("#explorer-hosts").val();
+        var hostArray = hostList.split(",");
+        explorerArray = createExplorers(hostArray);
+    }
 }
 
