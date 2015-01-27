@@ -1,25 +1,21 @@
 package com.insano10.explorerchallenge.servlets;
 
 import com.insano10.explorerchallenge.explorer.Explorer;
-import com.insano10.explorerchallenge.explorer.StupidExplorer;
+import com.insano10.explorerchallenge.explorer.TheSonOfDarcula;
 import com.insano10.explorerchallenge.session.ExplorerSession;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ExplorerServlet extends HttpServlet
 {
     private final Map<String, ExplorerSession> sessions = new HashMap<>();
-
-    private Explorer createExplorer()
-    {
-        return new StupidExplorer();
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -89,5 +85,10 @@ public class ExplorerServlet extends HttpServlet
             sessions.put(sessionId, explorerSession);
         }
         return explorerSession;
+    }
+
+    private Explorer createExplorer()
+    {
+        return new TheSonOfDarcula();
     }
 }
