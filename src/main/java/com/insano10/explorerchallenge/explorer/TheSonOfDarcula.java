@@ -4,9 +4,7 @@ import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
 import com.insano10.explorerchallenge.maze.Key;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by mikec on 27/01/15.
@@ -17,7 +15,7 @@ public class TheSonOfDarcula implements Explorer
 
 	private Key mazeKey;
 	private Map<Coordinate, CoordinateInfo> whatIKnow;
-	private long time;
+	private int time;
 
 	@Override
 	public String getName()
@@ -43,7 +41,7 @@ public class TheSonOfDarcula implements Explorer
 	{
 		whatIKnow.putIfAbsent(fromLocation, new CoordinateInfo(fromLocation));
 		Arrays.stream(Direction.values()).forEach(direction -> {
-			Coordinate neighbour = whatIKnow.get(fromLocation).getNeighbour(direction);
+			Coordinate neighbour = CoordinateUtils.getCoordsFromDirection(fromLocation, direction);
 			whatIKnow.putIfAbsent(neighbour, new CoordinateInfo(neighbour));
 			if (!CoordinateUtils.inArray(direction, availableDirections))
 			{
@@ -62,10 +60,10 @@ public class TheSonOfDarcula implements Explorer
 			}
 		}
 		int minVisited = Integer.MAX_VALUE - 1;
-		Direction minVisitedDir = null;
+		List<Direction> minVisitedDir = new ArrayList<>();
 		for (Direction direction : Direction.values())
 		{
-			Coordinate neighbourCoordinate = whatIKnow.get(fromLocation).getNeighbour(direction);
+			Coordinate neighbourCoordinate = CoordinateUtils.getCoordsFromDirection(fromLocation, direction);
 			CoordinateInfo neighbour = whatIKnow.get(neighbourCoordinate);
 			if (!neighbour.isWall())
 			{
@@ -73,23 +71,48 @@ public class TheSonOfDarcula implements Explorer
 				{
 					return direction;
 				}
+				else if (neighbour.getNumVisits() == minVisited)
+				{
+					minVisitedDir.add(direction);
+				}
 				else if (neighbour.getNumVisits() < minVisited)
 				{
 					minVisited = neighbour.getNumVisits();
-					minVisitedDir = direction;
+					minVisitedDir.clear();
+					minVisitedDir.add(direction);
 				}
 			}
 		}
-		return minVisitedDir;
+		Direction result = null;
+		if (minVisitedDir.size() > 0)
+		{
+			result = minVisitedDir.get(0);
+		}
+		if (minVisitedDir.size() > 1)
+		{
+			int earliestVisit = Integer.MAX_VALUE - 1;
+			for(Direction direction : minVisitedDir)
+			{
+				Coordinate neighbourCoordinate = CoordinateUtils.getCoordsFromDirection(fromLocation, direction);
+				CoordinateInfo neighbour = whatIKnow.get(neighbourCoordinate);
+				if (neighbour.getLastVisit() < earliestVisit)
+				{
+					earliestVisit = neighbour.getLastVisit();
+					result = direction;
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override
 	public void move(Coordinate fromLocation, Coordinate toLocation)
 	{
 		whatIKnow.get(fromLocation).incrementNumVisits();
+		whatIKnow.get(fromLocation).setLastVisit(time);
 		whatIKnow.putIfAbsent(toLocation, new CoordinateInfo(toLocation));
 		Arrays.stream(Direction.values()).forEach(direction -> {
-			Coordinate neighbour = whatIKnow.get(fromLocation).getNeighbour(direction);
+			Coordinate neighbour = CoordinateUtils.getCoordsFromDirection(fromLocation, direction);
 			whatIKnow.putIfAbsent(neighbour, new CoordinateInfo(neighbour));
 
 		});

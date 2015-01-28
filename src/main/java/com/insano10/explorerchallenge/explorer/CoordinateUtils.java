@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class CoordinateUtils
 {
-	public static Coordinate getDirectionCoordinates(final Coordinate currentLocation, final Direction direction)
+	public static Coordinate getCoordsFromDirection(final Coordinate currentLocation, final Direction direction)
 	{
 		int x = currentLocation.getX();
 		int y = currentLocation.getY();
@@ -50,20 +50,20 @@ public class CoordinateUtils
 		if (known.containsKey(location))
 		{
 			List<CoordinateInfo> nonWalls = new ArrayList<>();
-			CoordinateInfo locationInfo = known.get(location);
 			int numWalls = 0;
 			for (Direction direction : Direction.values())
 			{
-				if (known.containsKey(locationInfo.getNeighbour(direction)))
+				Coordinate neighbour = CoordinateUtils.getCoordsFromDirection(location, direction);
+				if (known.containsKey(neighbour))
 				{
-					CoordinateInfo neighbour = known.get(locationInfo.getNeighbour(direction));
-					if (neighbour.isWall())
+					CoordinateInfo neighbourInfo = known.get(neighbour);
+					if (neighbourInfo.isWall())
 					{
 						numWalls++;
 					}
 					else
 					{
-						nonWalls.add(neighbour);
+						nonWalls.add(neighbourInfo);
 					}
 				}
 			}
