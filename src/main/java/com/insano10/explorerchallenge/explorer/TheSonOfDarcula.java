@@ -39,10 +39,10 @@ public class TheSonOfDarcula implements Explorer
 	@Override
 	public Direction whichWayNow(final Coordinate fromLocation, final Direction[] availableDirections)
 	{
-		whatIKnow.putIfAbsent(fromLocation, new CoordinateInfo(fromLocation));
+		whatIKnow.putIfAbsent(fromLocation, new CoordinateInfo());
 		Arrays.stream(Direction.values()).forEach(direction -> {
 			Coordinate neighbour = CoordinateUtils.getCoordsFromDirection(fromLocation, direction);
-			whatIKnow.putIfAbsent(neighbour, new CoordinateInfo(neighbour));
+			whatIKnow.putIfAbsent(neighbour, new CoordinateInfo());
 			if (!CoordinateUtils.inArray(direction, availableDirections))
 			{
 				whatIKnow.get(neighbour).markAsWall();
@@ -110,10 +110,10 @@ public class TheSonOfDarcula implements Explorer
 	{
 		whatIKnow.get(fromLocation).incrementNumVisits();
 		whatIKnow.get(fromLocation).setLastVisit(time);
-		whatIKnow.putIfAbsent(toLocation, new CoordinateInfo(toLocation));
+		whatIKnow.putIfAbsent(toLocation, new CoordinateInfo());
 		Arrays.stream(Direction.values()).forEach(direction -> {
 			Coordinate neighbour = CoordinateUtils.getCoordsFromDirection(fromLocation, direction);
-			whatIKnow.putIfAbsent(neighbour, new CoordinateInfo(neighbour));
+			whatIKnow.putIfAbsent(neighbour, new CoordinateInfo());
 
 		});
 		if (CoordinateUtils.isDeadEnd(fromLocation, whatIKnow))

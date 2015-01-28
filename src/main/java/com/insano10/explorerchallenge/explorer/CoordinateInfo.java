@@ -8,24 +8,17 @@ import com.insano10.explorerchallenge.maze.Direction;
  */
 public class CoordinateInfo
 {
-	private final Coordinate location;
 	private int numVisits;
 	private int lastVisit;
 	private Direction nearestNeighbourToDoor;
 	private boolean deadEnd; //or leadsToDeadEnd
 
-	public CoordinateInfo(Coordinate location)
+	public CoordinateInfo()
 	{
-		this.location = location;
 		this.numVisits = 0;
 		this.lastVisit = 0;
 		this.deadEnd = false;
 		this.nearestNeighbourToDoor = null;
-	}
-
-	public Coordinate getLocation()
-	{
-		return location;
 	}
 
 	public void addNearestNeighbourToDoor(final Direction nearestNeighbourToDoor)
