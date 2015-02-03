@@ -12,38 +12,7 @@ import java.util.Map;
  */
 public class CoordinateUtils
 {
-	public static Coordinate getCoordsFromDirection(final Coordinate currentLocation, final Direction direction)
-	{
-		int x = currentLocation.getX();
-		int y = currentLocation.getY();
-		switch (direction)
-		{
-			case NORTH:
-			{
-				y++;
-				break;
-			}
-
-			case EAST:
-			{
-				x++;
-				break;
-			}
-
-			case SOUTH:
-			{
-				y--;
-				break;
-			}
-
-			case WEST:
-			{
-				x--;
-				break;
-			}
-		}
-		return Coordinate.create(x, y);
-	}
+	public final static Direction[] ORDERED_DIRECTIONS = {Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
 
 	public static boolean isDeadEnd(final Coordinate location, final Map<Coordinate, CoordinateInfo> known)
 	{
@@ -51,7 +20,7 @@ public class CoordinateUtils
 		{
 			List<CoordinateInfo> nonWalls = new ArrayList<>();
 			int numWalls = 0;
-			for (Direction direction : Direction.values())
+			for (Direction direction : CoordinateUtils.ORDERED_DIRECTIONS)
 			{
 				Coordinate neighbour = CoordinateUtils.getCoordsFromDirection(location, direction);
 				if (known.containsKey(neighbour))
@@ -89,15 +58,73 @@ public class CoordinateUtils
 		return false; // should really  be 'huh?'
 	}
 
+	public static Coordinate getCoordsFromDirection(final Coordinate currentLocation, final Direction direction)
+	{
+		int x = currentLocation.getX() + direction.getxOffset();
+		int y = currentLocation.getY() + direction.getyOffset();
+		return Coordinate.create(x, y);
+	}
+
 	public static boolean inArray(final Direction direction, final Direction[] directions)
 	{
-		for (Direction dir : directions)
+		if (direction != null)
 		{
-			if (dir.equals(direction))
+			for (Direction dir : directions)
 			{
-				return true;
+				if (dir.equals(direction))
+				{
+					return true;
+				}
 			}
 		}
 		return false;
 	}
+
+	public static boolean isOpposite(final Direction fromDirection, final Direction toDirection)
+	{
+		return fromDirection.equals(Direction.EAST) && toDirection.equals(Direction.WEST) ||
+		       fromDirection.equals(Direction.WEST) && toDirection.equals(Direction.EAST) ||
+		       fromDirection.equals(Direction.NORTH) && toDirection.equals(Direction.SOUTH) ||
+		       fromDirection.equals(Direction.SOUTH) && toDirection.equals(Direction.NORTH);
+	}
+
+	public static Direction getOpposite(final Direction fromDirection)
+	{
+		switch (fromDirection)
+		{
+			case EAST:
+			{
+				return Direction.WEST;
+			}
+
+			case SOUTH:
+			{
+				return Direction.NORTH;
+			}
+
+			case WEST:
+			{
+				return Direction.EAST;
+			}
+
+			case NORTH:
+			{
+				return Direction.SOUTH;
+			}
+		}
+		return null;
+	}
+
+//	public static void backtrackDeadEnd(final Coordinate location, final Map<Coordinate, CoordinateInfo> known)
+//	{
+//		final CoordinateInfo currLocation = known.get(location);
+//		if (currLocation == null || currLocation.isDeadEnd())
+//		{
+//			return;
+//		}
+//		if (currLocation.getActiveNeighbours() > 2)
+//		{
+//
+//		}
+//	}
 }
