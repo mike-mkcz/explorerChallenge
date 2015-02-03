@@ -13,19 +13,20 @@ import java.util.Map;
 public class CoordinateUtils
 {
 	public final static List<Direction> ORDERED_DIRECTIONS = new ArrayList<>();
-    static
-    {
-        ORDERED_DIRECTIONS.add(Direction.EAST);
-        ORDERED_DIRECTIONS.add(Direction.SOUTH);
-        ORDERED_DIRECTIONS.add(Direction.WEST);
-        ORDERED_DIRECTIONS.add(Direction.NORTH);
-    }
+
+	static
+	{
+		ORDERED_DIRECTIONS.add(Direction.EAST);
+		ORDERED_DIRECTIONS.add(Direction.SOUTH);
+		ORDERED_DIRECTIONS.add(Direction.WEST);
+		ORDERED_DIRECTIONS.add(Direction.NORTH);
+	}
 
 	public static boolean isDeadEnd(final Coordinate location, final Map<Coordinate, CoordinateInfo> known)
 	{
 		//have to work on this
-        return false;
-    }
+		return false;
+	}
 
 	public static Coordinate getCoordsFromDirection(final Direction direction, final Coordinate currentLocation)
 	{

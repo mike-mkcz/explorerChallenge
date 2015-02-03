@@ -5,9 +5,9 @@ import com.insano10.explorerchallenge.maze.Direction;
 import com.insano10.explorerchallenge.maze.Key;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
-import static com.insano10.explorerchallenge.explorer.CoordinateUtils.*;
+import static com.insano10.explorerchallenge.explorer.CoordinateUtils.ORDERED_DIRECTIONS;
+import static com.insano10.explorerchallenge.explorer.CoordinateUtils.getCoordsFromDirection;
 import static com.insano10.explorerchallenge.explorer.World.worldInstance;
 
 /**
@@ -19,7 +19,7 @@ public class TheSonOfDarcula implements Explorer
 
 	private Key key;
 	private Direction lastDirection;
-    private State currentState;
+	private State currentState;
 
 	@Override
 	public String getName()
@@ -31,15 +31,15 @@ public class TheSonOfDarcula implements Explorer
 	public void enterMaze(Coordinate startLocation)
 	{
 		key = null;
-        worldInstance().reset();
-        currentState = StateFactory.getWanderingState();
+		worldInstance().reset();
+		currentState = StateFactory.getWanderingState();
 	}
 
 	@Override
 	public Direction whichWayNow(final Coordinate fromLocation, final Direction[] availableDirections)
 	{
 		lastDirection = currentState.getDirection(lastDirection, fromLocation, Arrays.asList(availableDirections));
-        return lastDirection;
+		return lastDirection;
 	}
 
 	@Override

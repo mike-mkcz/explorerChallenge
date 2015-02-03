@@ -46,7 +46,7 @@ public class CoordinateInfo
 			isDeadEnd = false;
 		}
 	}
-	
+
 	public void incrementNumVisits()
 	{
 		numVisits++;
@@ -62,19 +62,6 @@ public class CoordinateInfo
 		this.lastVisit = lastVisit;
 	}
 
-	public void markAsDeadEnd()
-	{
-		if (!isDoor())
-		{
-			isDeadEnd = true;
-		}
-	}
-
-	public boolean isDoor()
-	{
-		return isDoor;
-	}
-
 	public boolean isDeadEnd()
 	{
 		return isDeadEnd;
@@ -83,13 +70,26 @@ public class CoordinateInfo
 	public void setActiveNeighbours(final int activeNeighbours)
 	{
 		this.activeNeighbours = activeNeighbours;
-        if (this.activeNeighbours == 1)
-        {
-            if (!isDoor())
-            {
-                markAsDeadEnd();
-            }
-        }
+		if (this.activeNeighbours == 1)
+		{
+			if (!isDoor())
+			{
+				markAsDeadEnd();
+			}
+		}
+	}
+
+	public boolean isDoor()
+	{
+		return isDoor;
+	}
+
+	public void markAsDeadEnd()
+	{
+		if (!isDoor())
+		{
+			isDeadEnd = true;
+		}
 	}
 
 	public void incrementVisitedNeighbours()

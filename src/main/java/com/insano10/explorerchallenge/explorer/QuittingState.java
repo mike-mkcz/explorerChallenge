@@ -8,9 +8,11 @@ import java.util.List;
 /**
  * Created by mikec on 2/3/15.
  */
-public class QuittingState implements State {
-    @Override
-    public Direction getDirection(Direction lastDirection, Coordinate location, List<Direction> availableDirections) {
-        return null;
-    }
+public class QuittingState implements State
+{
+	@Override
+	public Direction getDirection(Direction lastDirection, Coordinate location, List<Direction> availableDirections)
+	{
+		return null;
+	}
 }

@@ -11,55 +11,54 @@ import java.util.Map;
  */
 public final class World
 {
-    private static World INSTANCE;
+	private static World INSTANCE;
+	private Map<Coordinate, CoordinateInfo> knowledgebase;
+	private int time;
+	
+	private World()
+	{
+		knowledgebase = new HashMap<>();
+		reset();
+	}
 
-    public static World worldInstance()
-    {
-        if (World.INSTANCE == null)
-        {
-            World.INSTANCE = new World();
-        }
-        return World.INSTANCE;
-    }
+	public void reset()
+	{
+		knowledgebase.clear();
+		time = 0;
+	}
 
-    private Map<Coordinate, CoordinateInfo> knowledgebase;
-    private int time;
+	public static World worldInstance()
+	{
+		if (World.INSTANCE == null)
+		{
+			World.INSTANCE = new World();
+		}
+		return World.INSTANCE;
+	}
 
-    private World()
-    {
-        knowledgebase = new HashMap<>();
-        reset();
-    }
+	public Map<Coordinate, CoordinateInfo> getKnowledgebase()
+	{
+		return knowledgebase;
+	}
 
-    public void reset()
-    {
-        knowledgebase.clear();
-        time = 0;
-    }
+	public CoordinateInfo computeRelativeIfAbsent(final Direction direction, final Coordinate fromLocation)
+	{
+		Coordinate relativeCoordinates = CoordinateUtils.getCoordsFromDirection(direction, fromLocation);
+		return computeIfAbsent(relativeCoordinates);
+	}
 
-    public Map<Coordinate, CoordinateInfo> getKnowledgebase()
-    {
-        return knowledgebase;
-    }
+	public CoordinateInfo computeIfAbsent(final Coordinate location)
+	{
+		return knowledgebase.computeIfAbsent(location, cLocation -> new CoordinateInfo());
+	}
 
-    public CoordinateInfo computeRelativeIfAbsent(final Direction direction, final Coordinate fromLocation)
-    {
-        Coordinate relativeCoordinates = CoordinateUtils.getCoordsFromDirection(direction, fromLocation);
-        return computeIfAbsent(relativeCoordinates);
-    }
+	public void tick()
+	{
+		time++;
+	}
 
-    public CoordinateInfo computeIfAbsent(final Coordinate location)
-    {
-        return knowledgebase.computeIfAbsent(location, cLocation -> new CoordinateInfo());
-    }
-
-    public void tick()
-    {
-        time++;
-    }
-
-    public int getTime()
-    {
-        return time;
-    }
+	public int getTime()
+	{
+		return time;
+	}
 }
