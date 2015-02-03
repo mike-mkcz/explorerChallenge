@@ -12,53 +12,22 @@ import java.util.Map;
  */
 public class CoordinateUtils
 {
-	public final static Direction[] ORDERED_DIRECTIONS = {Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
+	public final static List<Direction> ORDERED_DIRECTIONS = new ArrayList<>();
+    static
+    {
+        ORDERED_DIRECTIONS.add(Direction.EAST);
+        ORDERED_DIRECTIONS.add(Direction.SOUTH);
+        ORDERED_DIRECTIONS.add(Direction.WEST);
+        ORDERED_DIRECTIONS.add(Direction.NORTH);
+    }
 
 	public static boolean isDeadEnd(final Coordinate location, final Map<Coordinate, CoordinateInfo> known)
 	{
-		if (known.containsKey(location))
-		{
-			List<CoordinateInfo> nonWalls = new ArrayList<>();
-			int numWalls = 0;
-			for (Direction direction : CoordinateUtils.ORDERED_DIRECTIONS)
-			{
-				Coordinate neighbour = CoordinateUtils.getCoordsFromDirection(location, direction);
-				if (known.containsKey(neighbour))
-				{
-					CoordinateInfo neighbourInfo = known.get(neighbour);
-					if (neighbourInfo.isWall())
-					{
-						numWalls++;
-					}
-					else
-					{
-						nonWalls.add(neighbourInfo);
-					}
-				}
-			}
-			if (numWalls < 2)
-			{
-				return false;
-			}
-			else if (numWalls > 2)
-			{
-				return true;
-			}
-			else
-			{
-				for (CoordinateInfo nonWallNeighbour : nonWalls)
-				{
-					if (nonWallNeighbour.isDeadEnd())
-					{
-						return true;
-					}
-				}
-			}
-		}
-		return false; // should really  be 'huh?'
-	}
+		//have to work on this
+        return false;
+    }
 
-	public static Coordinate getCoordsFromDirection(final Coordinate currentLocation, final Direction direction)
+	public static Coordinate getCoordsFromDirection(final Direction direction, final Coordinate currentLocation)
 	{
 		int x = currentLocation.getX() + direction.getxOffset();
 		int y = currentLocation.getY() + direction.getyOffset();
