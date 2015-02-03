@@ -12,5 +12,5 @@ import java.util.Map;
  */
 public interface State
 {
-    public Direction getDirection(final Map<Coordinate, CoordinateInfo> knowledgeBase, Direction lastDirection, final Coordinate location, final List<Direction> availableDirections);
+    public Direction getDirection(Direction lastDirection, final Coordinate location, final List<Direction> availableDirections);
 }

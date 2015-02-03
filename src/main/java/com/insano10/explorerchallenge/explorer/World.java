@@ -13,7 +13,7 @@ public final class World
 {
     private static World INSTANCE;
 
-    public static World getInstance()
+    public static World worldInstance()
     {
         if (World.INSTANCE == null)
         {
@@ -42,16 +42,15 @@ public final class World
         return knowledgebase;
     }
 
-    public CoordinateInfo computeIfAbset()
-
-    public CoordinateInfo get(final Direction neighbour, final Coordinate fromLocation)
+    public CoordinateInfo computeRelativeIfAbsent(final Direction direction, final Coordinate fromLocation)
     {
-        return get(CoordinateUtils.getCoordsFromDirection(neighbour, fromLocation));
+        Coordinate relativeCoordinates = CoordinateUtils.getCoordsFromDirection(direction, fromLocation);
+        return computeIfAbsent(relativeCoordinates);
     }
 
-    public CoordinateInfo get(final Coordinate location)
+    public CoordinateInfo computeIfAbsent(final Coordinate location)
     {
-        return knowledgebase.get(location);
+        return knowledgebase.computeIfAbsent(location, cLocation -> new CoordinateInfo());
     }
 
     public void tick()

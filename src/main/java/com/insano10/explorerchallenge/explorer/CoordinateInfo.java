@@ -83,6 +83,13 @@ public class CoordinateInfo
 	public void setActiveNeighbours(final int activeNeighbours)
 	{
 		this.activeNeighbours = activeNeighbours;
+        if (this.activeNeighbours == 1)
+        {
+            if (!isDoor())
+            {
+                markAsDeadEnd();
+            }
+        }
 	}
 
 	public void incrementVisitedNeighbours()

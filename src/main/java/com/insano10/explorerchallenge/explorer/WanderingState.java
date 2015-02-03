@@ -8,16 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.insano10.explorerchallenge.explorer.CoordinateUtils.*;
 import static com.insano10.explorerchallenge.explorer.CoordinateUtils.ORDERED_DIRECTIONS;
+import static com.insano10.explorerchallenge.explorer.CoordinateUtils.isOpposite;
+import static com.insano10.explorerchallenge.explorer.World.worldInstance;
 
 /**
  * Created by mikec on 2/3/15.
  */
 public class WanderingState implements State {
     @Override
-    public Direction getDirection(Map<Coordinate, CoordinateInfo> knowledgeBase, Direction lastDirection, Coordinate location, List<Direction> availableDirections) {
-        CoordinateInfo currLocation = knowledgeBase.computeIfAbsent(location, cLocation -> new CoordinateInfo());
+    public Direction getDirection(Direction lastDirection, Coordinate location, List<Direction> availableDirections) {
+
+        CoordinateInfo currLocation = worldInstance().computeIfAbsent(location);
 
         if (currLocation == null)
         {
@@ -27,26 +29,11 @@ public class WanderingState implements State {
         currLocation.setActiveNeighbours(availableDirections.size());
 
         ORDERED_DIRECTIONS.forEach(direction -> {
-            Coordinate neighbour = getCoordsFromDirection(direction, location);
-            knowledgeBase.putIfAbsent(neighbour, new CoordinateInfo());
+            CoordinateInfo neighbour = worldInstance().computeRelativeIfAbsent(direction, location);
             if (!availableDirections.contains(direction)) {
-                knowledgeBase.get(neighbour).markAsWall();
+                neighbour.markAsWall();
             }
         });
-
-        if (availableDirections.size() == 1)
-        {
-            currLocation.markAsDeadEnd();
-        }
-//		else
-//		{
-//			if (CoordinateUtils.isDeadEnd(location, knowledgeBase))
-//			{
-//				currLocation.isDeadEnd();
-//			}
-//		}
-
-        checkNeighboursForDoor(location);
 
         final Map<Direction, Integer> directionScore = new HashMap<>();
         int tmpScore = -1;
@@ -55,9 +42,8 @@ public class WanderingState implements State {
         System.out.println("Current Location: " + location);
         for (Direction direction : availableDirections)
         {
-            Coordinate neighbourCoordinate = getCoordsFromDirection(direction, location);
-            CoordinateInfo neighbour = knowledgeBase.get(neighbourCoordinate);
-            int score = neighbour.computeScore(time);
+            CoordinateInfo neighbour = worldInstance().computeRelativeIfAbsent(direction,location);
+            int score = neighbour.computeScore(worldInstance().getTime());
             System.out.println(direction + " score: " + score + "   " + neighbour.toString());
             directionScore.put(direction, score);
             if (score > tmpScore)
@@ -79,8 +65,7 @@ public class WanderingState implements State {
         else
         {
             List<Map.Entry<Direction, Integer>> nonOppositeDirections = maxScoreDirections.stream()
-                    .filter(entry -> !
-                            isOpposite(fromDirection, entry.getKey()))
+                    .filter(entry -> !isOpposite(fromDirection, entry.getKey()))
                     .collect(Collectors.toList());
             if (nonOppositeDirections.size() == 1)
             {
@@ -88,14 +73,6 @@ public class WanderingState implements State {
             }
             else
             {
-                for (Map.Entry<Direction, Integer> entry : nonOppositeDirections)
-                {
-                    if (fromDirection.equals(entry.getKey()))
-                    {
-                        lastDirection = entry.getKey();
-                        return lastDirection;
-                    }
-                }
                 for (Direction direction : ORDERED_DIRECTIONS)
                 {
                     for (Map.Entry<Direction, Integer> entry : nonOppositeDirections)

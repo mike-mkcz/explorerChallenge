@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static com.insano10.explorerchallenge.explorer.CoordinateUtils.*;
+import static com.insano10.explorerchallenge.explorer.World.worldInstance;
 
 /**
  * Created by mikec on 27/01/15.
@@ -30,45 +31,26 @@ public class TheSonOfDarcula implements Explorer
 	public void enterMaze(Coordinate startLocation)
 	{
 		key = null;
-		if (knowledgebase == null)
-		{
-			knowledgebase = new HashMap<>();
-		}
-		knowledgebase.clear();
-		time = 0;
+        worldInstance().reset();
         currentState = StateFactory.getWanderingState();
 	}
 
 	@Override
 	public Direction whichWayNow(final Coordinate fromLocation, final Direction[] availableDirections)
 	{
-		return currentState.getDirection(knowledgebase, lastDirection, fromLocation, Arrays.asList(availableDirections));
+		lastDirection = currentState.getDirection(lastDirection, fromLocation, Arrays.asList(availableDirections));
+        return lastDirection;
 	}
 
 	@Override
 	public void move(Coordinate fromLocation, Coordinate toLocation)
 	{
-		CoordinateInfo currLocation = knowledgebase.get(fromLocation);
+		CoordinateInfo currLocation = worldInstance().computeIfAbsent(fromLocation);
 		currLocation.incrementNumVisits();
 		currLocation.incrementVisitedNeighbours();
-		currLocation.setLastVisit(time);
-		CoordinateInfo newLocation = knowledgebase.get(toLocation);
-		if (currLocation.isDoor())
-		{
-			newLocation.setDirectionToDoor(getOpposite(lastDirection));
-		}
-		else
-		{
-			if (currLocation.getToDoor() != null)
-			{
-				newLocation.setDirectionToDoor(getOpposite(lastDirection));
-			}
-			else
-			{
-				checkNeighboursForDoor(toLocation);
-			}
-		}
-		time++;
+		currLocation.setLastVisit(worldInstance().getTime());
+
+		worldInstance().tick();
 	}
 
 	@Override
