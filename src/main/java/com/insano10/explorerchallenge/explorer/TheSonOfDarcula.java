@@ -4,10 +4,6 @@ import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
 import com.insano10.explorerchallenge.maze.Key;
 
-import java.util.Arrays;
-
-import static com.insano10.explorerchallenge.explorer.CoordinateUtils.ORDERED_DIRECTIONS;
-import static com.insano10.explorerchallenge.explorer.CoordinateUtils.getCoordsFromDirection;
 import static com.insano10.explorerchallenge.explorer.World.worldInstance;
 
 /**
@@ -32,23 +28,32 @@ public class TheSonOfDarcula implements Explorer
 	{
 		key = null;
 		worldInstance().reset();
-		currentState = StateFactory.getWanderingState();
+		currentState = StateFactory.getRandomWanderingState();
 	}
 
 	@Override
 	public Direction whichWayNow(final Coordinate fromLocation, final Direction[] availableDirections)
 	{
-		lastDirection = currentState.getDirection(lastDirection, fromLocation, Arrays.asList(availableDirections));
+		lastDirection = currentState.getDirection(lastDirection, fromLocation, Utils.orderDirections(availableDirections));
 		return lastDirection;
 	}
 
 	@Override
 	public void move(Coordinate fromLocation, Coordinate toLocation)
 	{
-		CoordinateInfo currLocation = worldInstance().computeIfAbsent(fromLocation);
-		currLocation.incrementNumVisits();
-		currLocation.incrementVisitedNeighbours();
-		currLocation.setLastVisit(worldInstance().getTime());
+		CoordinateInfo from = worldInstance().computeIfAbsent(fromLocation);
+		from.incrementNumVisits();
+		from.incrementVisitedNeighbours();
+		from.setLastVisit(worldInstance().getTime());
+		
+		if (worldInstance().doorFound())
+		{
+			CoordinateInfo to = worldInstance().computeIfAbsent(toLocation);
+			if (to.getStepsToDoor() > from.getStepsToDoor() + 1)
+			{
+				to.setStepsToDoor(from.getStepsToDoor() + 1);
+			}
+		}
 
 		worldInstance().tick();
 	}
@@ -57,6 +62,11 @@ public class TheSonOfDarcula implements Explorer
 	public void keyFound(Key key, Coordinate location)
 	{
 		this.key = key;
+		if (worldInstance().doorFound())
+		{
+			worldInstance().updateDoorCost();
+			currentState = StateFactory.getQuittingState();
+		}
 	}
 
 	@Override
@@ -68,35 +78,12 @@ public class TheSonOfDarcula implements Explorer
 	@Override
 	public void exitReached(Coordinate location)
 	{
-		knowledgebase.get(location).markAsDoor();
+		worldInstance().markDoorLocation(location);
 	}
 
 	@Override
 	public void exitMaze()
 	{
 
-	}
-
-	private void checkNeighboursForDoor(final Coordinate location)
-	{
-		CoordinateInfo locationInfo = knowledgebase.get(location);
-		for (Direction direction : ORDERED_DIRECTIONS)
-		{
-			Coordinate neighbourCoordinate = getCoordsFromDirection(direction, location);
-			CoordinateInfo neighbour = knowledgebase.get(neighbourCoordinate);
-			if (neighbour != null)
-			{
-				if (neighbour.isDoor())
-				{
-					locationInfo.setDirectionToDoor(direction);
-					return;
-				}
-				else if (neighbour.getToDoor() != null)
-				{
-					locationInfo.setDirectionToDoor(direction);
-					return;
-				}
-			}
-		}
 	}
 }

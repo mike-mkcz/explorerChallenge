@@ -5,16 +5,26 @@ package com.insano10.explorerchallenge.explorer;
  */
 public class StateFactory
 {
-	private static WanderingState WANDERER;
+	private static OrderedWanderingState ORDERED_WANDERER;
+	private static RandomWanderingState RANDOM_WANDERER;
 	private static QuittingState QUITTER;
 
-	public static State getWanderingState()
+	public static State getOrderedWanderingState()
 	{
-		if (StateFactory.WANDERER == null)
+		if (StateFactory.ORDERED_WANDERER == null)
 		{
-			StateFactory.WANDERER = new WanderingState();
+			StateFactory.ORDERED_WANDERER = new OrderedWanderingState();
 		}
-		return StateFactory.WANDERER;
+		return StateFactory.ORDERED_WANDERER;
+	}
+
+	public static State getRandomWanderingState()
+	{
+		if (StateFactory.RANDOM_WANDERER == null)
+		{
+			StateFactory.RANDOM_WANDERER = new RandomWanderingState();
+		}
+		return StateFactory.RANDOM_WANDERER;
 	}
 
 	public static State getQuittingState()

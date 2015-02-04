@@ -5,13 +5,16 @@ import com.insano10.explorerchallenge.maze.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Created by mikec on 27/01/15.
  */
-public class CoordinateUtils
+public class Utils
 {
+	private static Random RANDOM = new Random(0);
+	
 	public final static List<Direction> ORDERED_DIRECTIONS = new ArrayList<>();
 
 	static
@@ -21,20 +24,12 @@ public class CoordinateUtils
 		ORDERED_DIRECTIONS.add(Direction.WEST);
 		ORDERED_DIRECTIONS.add(Direction.NORTH);
 	}
-
-	public static boolean isDeadEnd(final Coordinate location, final Map<Coordinate, CoordinateInfo> known)
+	
+	public static List<Direction> orderDirections(final Direction[] directions)
 	{
-		//have to work on this
-		return false;
+		return ORDERED_DIRECTIONS.stream().filter(direction -> inArray(direction, directions)).collect(Collectors.toList());
 	}
-
-	public static Coordinate getCoordsFromDirection(final Direction direction, final Coordinate currentLocation)
-	{
-		int x = currentLocation.getX() + direction.getxOffset();
-		int y = currentLocation.getY() + direction.getyOffset();
-		return Coordinate.create(x, y);
-	}
-
+	
 	public static boolean inArray(final Direction direction, final Direction[] directions)
 	{
 		if (direction != null)
@@ -48,6 +43,13 @@ public class CoordinateUtils
 			}
 		}
 		return false;
+	}
+
+	public static Coordinate getCoordsFromDirection(final Direction direction, final Coordinate currentLocation)
+	{
+		int x = currentLocation.getX() + direction.getxOffset();
+		int y = currentLocation.getY() + direction.getyOffset();
+		return Coordinate.create(x, y);
 	}
 
 	public static boolean isOpposite(final Direction fromDirection, final Direction toDirection)
@@ -84,17 +86,9 @@ public class CoordinateUtils
 		}
 		return null;
 	}
-
-//	public static void backtrackDeadEnd(final Coordinate location, final Map<Coordinate, CoordinateInfo> known)
-//	{
-//		final CoordinateInfo currLocation = known.get(location);
-//		if (currLocation == null || currLocation.isDeadEnd())
-//		{
-//			return;
-//		}
-//		if (currLocation.getActiveNeighbours() > 2)
-//		{
-//
-//		}
-//	}
+	
+	public static int getRandom(final int range)
+	{
+		return (int) (0 + (range * RANDOM.nextDouble()));
+	}
 }
