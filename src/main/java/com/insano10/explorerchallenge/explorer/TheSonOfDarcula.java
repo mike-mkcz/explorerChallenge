@@ -28,7 +28,7 @@ public class TheSonOfDarcula implements Explorer
 	{
 		key = null;
 		worldInstance().reset();
-		currentState = StateFactory.getRandomWanderingState();
+		currentState = StateFactory.getOrderedWanderingState();
 	}
 
 	@Override
