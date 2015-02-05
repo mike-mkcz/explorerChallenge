@@ -1,4 +1,4 @@
-package com.insano10.explorerchallenge.explorer;
+package com.insano10.explorerchallenge.explorer.state;
 
 /**
  * Created by mikec on 2/3/15.

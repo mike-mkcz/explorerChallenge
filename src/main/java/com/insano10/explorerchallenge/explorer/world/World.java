@@ -1,5 +1,6 @@
-package com.insano10.explorerchallenge.explorer;
+package com.insano10.explorerchallenge.explorer.world;
 
+import com.insano10.explorerchallenge.explorer.Utils;
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
 
@@ -52,7 +53,7 @@ public final class World
 
 	public CoordinateInfo computeIfAbsent(final Coordinate location)
 	{
-		return knowledgebase.computeIfAbsent(location, cLocation -> new CoordinateInfo());
+		return knowledgebase.computeIfAbsent(location, cLocation -> new CoordinateInfo(cLocation));
 	}
 
 	public void markDoorLocation(final Coordinate location)
@@ -88,20 +89,19 @@ public final class World
 		{
 			boolean anyChanged = false;
 			int newStepsToDoor = currentLocation.getStepsToDoor() + 1;
-			for (Direction direction : currentLocation.getActiveNeighbours())
+			for (CoordinateNeighbour neighbour : currentLocation.getActiveNeighbours())
 			{
-				final CoordinateInfo neighbour = computeRelativeIfAbsent(direction, location);
 				if (neighbour.getStepsToDoor() > newStepsToDoor)
 				{
-					neighbour.setStepsToDoor(newStepsToDoor);
+					neighbour.getInfo().setStepsToDoor(newStepsToDoor);
 					anyChanged = true;
 				}
 			}
 			if (anyChanged)
 			{
-				for (Direction direction : currentLocation.getActiveNeighbours())
+				for (CoordinateNeighbour neighbour : currentLocation.getActiveNeighbours())
 				{
-					updateDoorCost(Utils.getCoordsFromDirection(direction, location));
+					updateDoorCost(neighbour.getCoordinate());
 				}
 			}
 		}
@@ -112,9 +112,9 @@ public final class World
 		CoordinateInfo currLocation = computeIfAbsent(location);
 		if (!currLocation.isDeadEnd() && currLocation.getActiveNeighbours().size() < 3)
 		{
-			for (Direction direction : currLocation.getActiveNeighbours())
+			for (CoordinateNeighbour neighbour : currLocation.getActiveNeighbours())
 			{
-				if (computeRelativeIfAbsent(direction, location).isDeadEnd())
+				if (neighbour.getInfo().isDeadEnd())
 				{
 					currLocation.markAsDeadEnd();
 					return;

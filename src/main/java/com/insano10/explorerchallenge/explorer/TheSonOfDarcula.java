@@ -1,10 +1,13 @@
 package com.insano10.explorerchallenge.explorer;
 
+import com.insano10.explorerchallenge.explorer.state.State;
+import com.insano10.explorerchallenge.explorer.state.StateFactory;
+import com.insano10.explorerchallenge.explorer.world.CoordinateInfo;
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
 import com.insano10.explorerchallenge.maze.Key;
 
-import static com.insano10.explorerchallenge.explorer.World.worldInstance;
+import static com.insano10.explorerchallenge.explorer.world.World.worldInstance;
 
 /**
  * Created by mikec on 27/01/15.
@@ -34,7 +37,11 @@ public class TheSonOfDarcula implements Explorer
 	@Override
 	public Direction whichWayNow(final Coordinate fromLocation, final Direction[] availableDirections)
 	{
+		System.out.println("================================================================================");
+		System.out.println(fromLocation);
 		lastDirection = currentState.getDirection(lastDirection, fromLocation, Utils.orderDirections(availableDirections));
+		System.out.println(lastDirection);
+		System.out.println("================================================================================");
 		return lastDirection;
 	}
 

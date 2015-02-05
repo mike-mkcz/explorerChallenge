@@ -1,5 +1,7 @@
-package com.insano10.explorerchallenge.explorer;
+package com.insano10.explorerchallenge.explorer.world;
 
+import com.insano10.explorerchallenge.explorer.Utils;
+import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
 
 import java.util.ArrayList;
@@ -10,17 +12,21 @@ import java.util.List;
  */
 public class CoordinateInfo
 {
+	private final Coordinate coordinate;
 	private int numVisits;
 	private int lastVisit;
 	private int visitedNeighbours;
 	private int stepsToDoor;
-	private List<Direction> activeNeighbours;
+	private List<CoordinateNeighbour> activeNeighbours;
 	private boolean isDoor;
 	private boolean isWall;
 	private boolean isDeadEnd; //or leadsToDeadEnd
-
-	public CoordinateInfo()
+	private int score;
+	private int scoreTime;
+	
+	public CoordinateInfo(final Coordinate coordinate)
 	{
+		this.coordinate = coordinate;
 		this.numVisits = 0;
 		this.lastVisit = -1;
 		this.visitedNeighbours = 0;
@@ -29,6 +35,13 @@ public class CoordinateInfo
 		this.stepsToDoor = Integer.MAX_VALUE;
 		this.isDoor = false;
 		this.isWall = false;
+		this.score = Integer.MIN_VALUE;
+		this.scoreTime = -1;
+	}
+	
+	public Coordinate getCoordinate()
+	{
+		return coordinate;
 	}
 
 	public void incrementNumVisits()
@@ -94,22 +107,25 @@ public class CoordinateInfo
 		return stepsToDoor;
 	}
 
-	public void setActiveNeighbours(final List<Direction> activeNeighbours)
+	public void setActiveNeighbours(final List<Direction> activeNeighbourDirections)
 	{
-		this.activeNeighbours = new ArrayList<>(activeNeighbours);
-		if (this.activeNeighbours.size() == 1)
+		if (activeNeighbours.isEmpty())
 		{
-			if (!isDoor())
+			activeNeighbourDirections
+					.forEach(direction -> activeNeighbours.add(new CoordinateNeighbour(direction, Utils.getCoordsFromDirection(direction, coordinate))));
+			if (this.activeNeighbours.size() == 1)
 			{
-				markAsDeadEnd();
+				if (!isDoor())
+				{
+					markAsDeadEnd();
+				}
 			}
 		}
 	}
 	
-	public List<Direction> getActiveNeighbours()
+	public List<CoordinateNeighbour> getActiveNeighbours()
 	{
 		return activeNeighbours;
-		
 	}
 
 	public void incrementVisitedNeighbours()
@@ -122,21 +138,25 @@ public class CoordinateInfo
 
 	public int computeScore(final int time)
 	{
-		if (isWall() || (isDeadEnd() && !isDoor()))
+		if (scoreTime != time)
 		{
-			return Integer.MIN_VALUE;
+			scoreTime = time;
+			if (isWall() || (isDeadEnd() && !isDoor()))
+			{
+				return Integer.MIN_VALUE;
+			}
+			score = 0;
+			if (!isVisited())
+			{
+				score += 10000;
+			}
+			score += (activeNeighbours.size() - visitedNeighbours) * 20;
+			if (lastVisit > -1)
+			{
+				score += (time - lastVisit);
+			}
+			score -= numVisits;
 		}
-		int score = 0;
-		if (!isVisited())
-		{
-			score += 10000;
-		}
-		score += (activeNeighbours.size() - visitedNeighbours) * 20;
-		if (lastVisit > -1)
-		{
-			score += (time - lastVisit);
-		}
-		score -= numVisits;
 		return score;
 	}
 
@@ -144,14 +164,17 @@ public class CoordinateInfo
 	public String toString()
 	{
 		return "CoordinateInfo{" +
-		       "numVisits=" + numVisits +
+		       "coordinate=" + coordinate +
+		       ", numVisits=" + numVisits +
 		       ", lastVisit=" + lastVisit +
 		       ", visitedNeighbours=" + visitedNeighbours +
+		       ", stepsToDoor=" + stepsToDoor +
 		       ", activeNeighbours=" + activeNeighbours +
-		       ", stepsToDoor=" + (stepsToDoor == Integer.MAX_VALUE ? "unknown" : stepsToDoor) +
 		       ", isDoor=" + isDoor +
 		       ", isWall=" + isWall +
 		       ", isDeadEnd=" + isDeadEnd +
+		       ", score=" + score +
+		       ", scoreTime=" + scoreTime +
 		       '}';
 	}
 }
