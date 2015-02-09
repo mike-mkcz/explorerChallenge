@@ -37,7 +37,6 @@ public class CoordinateNeighbour
 	public int getScore()
 	{
 		int score = getInfo().computeScore(worldInstance().getTime());
-		System.out.println(toString() + " Score: " + score + " " + " Info: " + getInfo().toString());
 		return score;
 	}
 

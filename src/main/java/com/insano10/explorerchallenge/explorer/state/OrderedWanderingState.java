@@ -21,8 +21,6 @@ public class OrderedWanderingState extends State
 		
 		final int maxScore = getMaxNeighbourScore(locationInfo);
 		
-		System.out.println("MaxScore{" + maxScore + "}");
-		
 		final List<CoordinateNeighbour> maxNeighbours = getMaxNeighbours(locationInfo, maxScore);
 		
 		if (maxNeighbours == null || maxNeighbours.isEmpty())

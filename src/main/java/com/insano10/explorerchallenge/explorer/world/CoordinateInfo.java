@@ -143,19 +143,22 @@ public class CoordinateInfo
 			scoreTime = time;
 			if (isWall() || (isDeadEnd() && !isDoor()))
 			{
-				return Integer.MIN_VALUE;
+				score = Integer.MIN_VALUE;
 			}
-			score = 0;
-			if (!isVisited())
+			else
 			{
-				score += 10000;
+				score = 0;
+				if (!isVisited())
+				{
+					score += 10000;
+				}
+				score += (activeNeighbours.size() - visitedNeighbours) * 20;
+				if (lastVisit > -1)
+				{
+					score += (time - lastVisit);
+				}
+				score -= numVisits;
 			}
-			score += (activeNeighbours.size() - visitedNeighbours) * 20;
-			if (lastVisit > -1)
-			{
-				score += (time - lastVisit);
-			}
-			score -= numVisits;
 		}
 		return score;
 	}

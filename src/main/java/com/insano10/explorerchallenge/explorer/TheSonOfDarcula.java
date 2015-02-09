@@ -37,11 +37,7 @@ public class TheSonOfDarcula implements Explorer
 	@Override
 	public Direction whichWayNow(final Coordinate fromLocation, final Direction[] availableDirections)
 	{
-		System.out.println("================================================================================");
-		System.out.println(fromLocation);
 		lastDirection = currentState.getDirection(lastDirection, fromLocation, Utils.orderDirections(availableDirections));
-		System.out.println(lastDirection);
-		System.out.println("================================================================================");
 		return lastDirection;
 	}
 
