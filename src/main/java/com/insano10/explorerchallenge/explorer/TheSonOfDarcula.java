@@ -30,11 +30,13 @@ public class TheSonOfDarcula implements Explorer
 	public void enterMaze(Coordinate startLocation)
 	{
 		key = null;
+		lastDirection = null;
 		worldInstance().reset();
 		//		currentState = StateFactory.getOrderedWanderingState();
+		currentState = StateFactory.getSmartOrderedWanderingState();
 		//		currentState = StateFactory.getRandomWanderingState();
 		//		currentState = StateFactory.getTremauxWanderingState();
-		currentState = StateFactory.getTremauxRandomWanderingState();
+		//		currentState = StateFactory.getTremauxRandomWanderingState();
 	}
 
 	@Override

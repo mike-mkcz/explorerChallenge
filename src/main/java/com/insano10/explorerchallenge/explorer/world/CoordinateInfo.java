@@ -21,6 +21,7 @@ public class CoordinateInfo
 	private boolean isDoor;
 	private boolean isWall;
 	private boolean isDeadEnd; //or leadsToDeadEnd
+	private boolean guess;
 	private int score;
 	private int scoreTime;
 	
@@ -37,6 +38,7 @@ public class CoordinateInfo
 		this.isWall = false;
 		this.score = Integer.MIN_VALUE;
 		this.scoreTime = -1;
+		this.guess = false;
 	}
 	
 	public Coordinate getCoordinate()
@@ -102,6 +104,16 @@ public class CoordinateInfo
 		return isDoor;
 	}
 	
+	public boolean isGuess()
+	{
+		return guess;
+	}
+
+	public void setGuess(boolean guess)
+	{
+		this.guess = guess;
+	}
+
 	public void setStepsToDoor(final int stepsToDoor)
 	{
 		this.stepsToDoor = stepsToDoor;
@@ -114,7 +126,7 @@ public class CoordinateInfo
 
 	public void setActiveNeighbours(final List<Direction> activeNeighbourDirections)
 	{
-		if (activeNeighbours.isEmpty())
+		if (activeNeighbours.isEmpty() || isGuess())
 		{
 			activeNeighbourDirections
 					.forEach(direction -> activeNeighbours.add(new CoordinateNeighbour(direction, Utils.getCoordsFromDirection(direction, coordinate))));

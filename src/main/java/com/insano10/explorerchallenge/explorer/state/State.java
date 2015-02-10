@@ -40,6 +40,8 @@ public abstract class State
 			}
 		});
 		
+		locationInfo.setGuess(false);
+		
 		return locationInfo;
 	}
 	
@@ -55,6 +57,10 @@ public abstract class State
 	
 	protected List<CoordinateNeighbour> getNonReturningMaxNeighbours(final Direction fromDirection, List<CoordinateNeighbour> neighbours)
 	{
+		if (fromDirection == null)
+		{
+			return neighbours;
+		}
 		return neighbours.stream().filter(neighbour -> !isOpposite(fromDirection, neighbour.getDirection()))
 		                   .collect(Collectors.toList());
 	}

@@ -4,8 +4,13 @@ import com.insano10.explorerchallenge.explorer.Utils;
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import static com.insano10.explorerchallenge.explorer.Utils.ORDERED_DIRECTIONS;
 
 /**
  * Created by mikec on 2/3/15.
@@ -27,6 +32,8 @@ public final class World
 	private int time;
 	private Coordinate doorLocation;
 	
+	private CoordinateConstraints minCoord, maxCoord;
+	
 	private World()
 	{
 		knowledgebase = new HashMap<>();
@@ -38,6 +45,8 @@ public final class World
 		knowledgebase.clear();
 		time = 0;
 		doorLocation = null;
+		minCoord = new CoordinateConstraints(Integer.MAX_VALUE, Integer.MAX_VALUE);
+		maxCoord = new CoordinateConstraints(Integer.MIN_VALUE, Integer.MIN_VALUE);
 	}
 
 	public Map<Coordinate, CoordinateInfo> getKnowledgebase()
@@ -53,9 +62,18 @@ public final class World
 
 	public CoordinateInfo computeIfAbsent(final Coordinate location)
 	{
+		updateLocationConstraints(location);
 		return knowledgebase.computeIfAbsent(location, cLocation -> new CoordinateInfo(cLocation));
 	}
-
+	
+	private void updateLocationConstraints(Coordinate location)
+	{
+		minCoord.compareAndSetX(location.getX(), true);
+		minCoord.compareAndSetY(location.getY(), true);
+		maxCoord.compareAndSetX(location.getX(), false);
+		maxCoord.compareAndSetY(location.getY(), false);
+	}
+	
 	public void markDoorLocation(final Coordinate location)
 	{
 		doorLocation = location;
@@ -120,6 +138,133 @@ public final class World
 					return;
 				}
 			}
+		}
+	}
+	
+	private boolean constrained(final int min, final int x, final int max)
+	{
+		return min <= x && x <= max;
+	}
+	
+	private boolean constrained(final Coordinate coordinate)
+	{
+		return constrained(minCoord.getX(), coordinate.getX(), maxCoord.getX()) && constrained(minCoord.getY(), coordinate.getY(), maxCoord.getY());
+	}
+	
+	private boolean onEdge(final int min, final int x, final int max)
+	{
+		return x == min || x == max;
+	}
+	
+	private boolean onEdge(final Coordinate coordinate)
+	{
+		return onEdge(minCoord.getX(), coordinate.getX(), maxCoord.getX()) || onEdge(minCoord.getY(), coordinate.getY(), maxCoord.getY());
+		
+	}
+	
+	public void guessAboutTheWorld(final Coordinate coordinate, final Set<Coordinate> visited)
+	{
+		if (visited.contains(coordinate))
+		{
+			return;
+		}
+		if (constrained(coordinate))
+		{
+			boolean guess = false;
+			if (!knowledgebase.containsKey(coordinate) || !knowledgebase.get(coordinate).isVisited())
+			{
+				guess = true;
+			}
+			CoordinateInfo coordinateInfo = worldInstance().computeIfAbsent(coordinate);
+			if (guess)
+			{
+				coordinateInfo.setGuess(guess);
+				int numWalls = 0;
+				int numDeadEnds = 0;
+				List<Direction> activeNeighbours = new ArrayList<>();
+				for (Direction direction : ORDERED_DIRECTIONS)
+				{
+					Coordinate neighbour = Utils.getCoordsFromDirection(direction, coordinate);
+					CoordinateInfo neighbourInfo = knowledgebase.get(neighbour);
+					if (neighbourInfo != null)
+					{
+						if (neighbourInfo.isWall())
+						{
+							numWalls++;
+						}
+						else
+						{
+							activeNeighbours.add(direction);
+							if (neighbourInfo.isDeadEnd())
+							{
+								numDeadEnds++;
+							}
+						}
+					}
+				}
+				coordinateInfo.setActiveNeighbours(activeNeighbours);
+				if (numWalls > 1)
+				{
+					if (numWalls == 2 && onEdge(coordinate))
+					{
+						coordinateInfo.markAsWall();
+					}
+					else if (numWalls > 2)
+					{
+						coordinateInfo.markAsWall();
+					}
+					else if (numWalls + numDeadEnds > 2)
+					{
+						coordinateInfo.markAsDeadEnd();
+					}
+				}
+				else if (numDeadEnds > 2)
+				{
+					coordinateInfo.markAsDeadEnd();
+				}
+			}
+			visited.add(coordinate);
+			for (Direction direction : ORDERED_DIRECTIONS)
+			{
+				Coordinate neighbour = Utils.getCoordsFromDirection(direction, coordinate);
+				guessAboutTheWorld(neighbour, visited);
+			}
+		}
+	}
+	
+	public void printWorldMap()
+	{
+		for (int y = maxCoord.getY(); y >= minCoord.getY(); y--)
+		{
+			for (int x = minCoord.getX(); x <= maxCoord.getX(); x++)
+			{
+				Coordinate coordinate = Coordinate.create(x, y);
+				if (knowledgebase.containsKey(coordinate))
+				{
+					CoordinateInfo info = knowledgebase.get(coordinate);
+					if (info.isWall())
+					{
+						System.out.print("*");
+					}
+					else if (info.isDeadEnd())
+					{
+						System.out.print("-");
+					}
+					else if (info.isVisited())
+					{
+						System.out.print("+");
+					}
+					else
+					{
+						System.out.print(" ");
+					}
+				}
+				else
+				{
+					System.out.print("?");
+				}
+			}
+			System.out.println();
 		}
 	}
 }

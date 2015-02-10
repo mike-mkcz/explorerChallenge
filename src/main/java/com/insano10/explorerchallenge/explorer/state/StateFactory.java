@@ -6,6 +6,7 @@ package com.insano10.explorerchallenge.explorer.state;
 public class StateFactory
 {
 	private static OrderedWanderingState ORDERED_WANDERER;
+	private static SmartArseOrderedWanderingState SMART_ORDERED_WANDERER;
 	private static TremauxWanderingState TREMAUX_WANDERER;
 	private static RandomWanderingState RANDOM_WANDERER;
 	private static TremauxRandomWanderingState TREMAUX_RANDOM_WANDERER;
@@ -18,6 +19,15 @@ public class StateFactory
 			StateFactory.ORDERED_WANDERER = new OrderedWanderingState();
 		}
 		return StateFactory.ORDERED_WANDERER;
+	}
+
+	public static State getSmartOrderedWanderingState()
+	{
+		if (StateFactory.SMART_ORDERED_WANDERER == null)
+		{
+			StateFactory.SMART_ORDERED_WANDERER = new SmartArseOrderedWanderingState();
+		}
+		return StateFactory.SMART_ORDERED_WANDERER;
 	}
 
 	public static State getTremauxWanderingState()

@@ -5,20 +5,24 @@ import com.insano10.explorerchallenge.explorer.world.CoordinateNeighbour;
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static com.insano10.explorerchallenge.explorer.Utils.ORDERED_DIRECTIONS;
+import static com.insano10.explorerchallenge.explorer.world.World.worldInstance;
 
 /**
  * Created by mikec on 2/3/15.
  */
-public class OrderedWanderingState extends State
+public class SmartArseOrderedWanderingState extends State
 {
 	@Override
 	public Direction getDirection(final Direction lastDirection, final Coordinate location, final List<Direction> availableDirections)
 	{
 		CoordinateInfo locationInfo = updateLocationDetails(location, availableDirections);
 		locationInfo.incrementNumVisits();
+		
+		worldInstance().guessAboutTheWorld(location, new HashSet<>());
 		
 		final int maxScore = getMaxNeighbourScore(locationInfo);
 		
