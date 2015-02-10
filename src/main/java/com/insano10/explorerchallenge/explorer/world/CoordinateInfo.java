@@ -53,6 +53,11 @@ public class CoordinateInfo
 	{
 		return numVisits > 0;
 	}
+	
+	public int getNumVisits()
+	{
+		return numVisits;
+	}
 
 	public void setLastVisit(final int lastVisit)
 	{
@@ -127,6 +132,16 @@ public class CoordinateInfo
 	{
 		return activeNeighbours;
 	}
+	
+	public boolean isCrossRoads()
+	{
+		return activeNeighbours.size() >= 3;
+	}
+
+	public boolean isValidMove()
+	{
+		return isWall() || (isDeadEnd() && !isDoor());
+	}
 
 	public void incrementVisitedNeighbours()
 	{
@@ -141,7 +156,7 @@ public class CoordinateInfo
 		if (scoreTime != time)
 		{
 			scoreTime = time;
-			if (isWall() || (isDeadEnd() && !isDoor()))
+			if (isValidMove())
 			{
 				score = Integer.MIN_VALUE;
 			}

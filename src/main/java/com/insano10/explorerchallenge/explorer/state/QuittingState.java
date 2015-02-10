@@ -7,8 +7,6 @@ import com.insano10.explorerchallenge.maze.Direction;
 
 import java.util.List;
 
-import static com.insano10.explorerchallenge.explorer.world.World.worldInstance;
-
 /**
  * Created by mikec on 2/3/15.
  */
@@ -17,7 +15,8 @@ public class QuittingState extends State
 	@Override
 	public Direction getDirection(final Direction lastDirection, final Coordinate location, final List<Direction> availableDirections)
 	{
-		CoordinateInfo currLocation = worldInstance().computeIfAbsent(location);
+		CoordinateInfo currLocation = updateLocationDetails(location, availableDirections);
+		currLocation.incrementNumVisits();
 		
 		if (currLocation == null)
 		{

@@ -18,8 +18,8 @@ import static com.insano10.explorerchallenge.explorer.world.World.worldInstance;
 public abstract class State
 {
 	public abstract Direction getDirection(final Direction lastDirection, final Coordinate location, final List<Direction> availableDirections);
-	
-	protected CoordinateInfo markLocationDetailsAndReturnNeighbours(final Coordinate location, final List<Direction> availableDirections)
+
+	protected CoordinateInfo updateLocationDetails(final Coordinate location, final List<Direction> availableDirections)
 	{
 		CoordinateInfo locationInfo = worldInstance().computeIfAbsent(location);
 		
@@ -53,9 +53,9 @@ public abstract class State
 		return locationInfo.getActiveNeighbours().stream().filter(neighbour -> neighbour.getScore() == filterScore).collect(Collectors.toList());
 	}
 	
-	protected List<CoordinateNeighbour> getNonReturningNeighbours(final CoordinateInfo locationInfo, final Direction fromDirection)
+	protected List<CoordinateNeighbour> getNonReturningMaxNeighbours(final Direction fromDirection, List<CoordinateNeighbour> neighbours)
 	{
-		return locationInfo.getActiveNeighbours().stream().filter(neighbour -> !isOpposite(fromDirection, neighbour.getDirection()))
+		return neighbours.stream().filter(neighbour -> !isOpposite(fromDirection, neighbour.getDirection()))
 		                   .collect(Collectors.toList());
 	}
 	

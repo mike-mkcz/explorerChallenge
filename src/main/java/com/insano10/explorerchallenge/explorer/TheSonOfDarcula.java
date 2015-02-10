@@ -31,7 +31,10 @@ public class TheSonOfDarcula implements Explorer
 	{
 		key = null;
 		worldInstance().reset();
-		currentState = StateFactory.getOrderedWanderingState();
+		//		currentState = StateFactory.getOrderedWanderingState();
+		//		currentState = StateFactory.getRandomWanderingState();
+		//		currentState = StateFactory.getTremauxWanderingState();
+		currentState = StateFactory.getTremauxRandomWanderingState();
 	}
 
 	@Override
@@ -45,7 +48,6 @@ public class TheSonOfDarcula implements Explorer
 	public void move(Coordinate fromLocation, Coordinate toLocation)
 	{
 		CoordinateInfo from = worldInstance().computeIfAbsent(fromLocation);
-		from.incrementNumVisits();
 		from.incrementVisitedNeighbours();
 		from.setLastVisit(worldInstance().getTime());
 		

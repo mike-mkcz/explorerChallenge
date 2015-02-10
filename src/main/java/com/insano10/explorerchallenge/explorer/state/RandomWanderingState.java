@@ -17,7 +17,8 @@ public class RandomWanderingState extends State
 	@Override
 	public Direction getDirection(final Direction lastDirection, final Coordinate location, final List<Direction> availableDirections)
 	{
-		CoordinateInfo locationInfo = markLocationDetailsAndReturnNeighbours(location, availableDirections);
+		CoordinateInfo locationInfo = updateLocationDetails(location, availableDirections);
+		locationInfo.incrementNumVisits();
 		
 		final int maxScore = getMaxNeighbourScore(locationInfo);
 		
@@ -32,7 +33,7 @@ public class RandomWanderingState extends State
 		
 		if (maxNeighbours.size() > 1)
 		{
-			final List<CoordinateNeighbour> nonReturningNeighbours = getNonReturningNeighbours(locationInfo, lastDirection);
+			final List<CoordinateNeighbour> nonReturningNeighbours = getNonReturningMaxNeighbours(lastDirection, maxNeighbours);
 			
 			if (nonReturningNeighbours != null && !nonReturningNeighbours.isEmpty())
 			{
