@@ -1,7 +1,5 @@
 package com.insano10.explorerchallenge.explorer;
 
-import com.insano10.explorerchallenge.explorer.state.State;
-import com.insano10.explorerchallenge.explorer.state.StateFactory;
 import com.insano10.explorerchallenge.explorer.world.CoordinateInfo;
 import com.insano10.explorerchallenge.maze.Coordinate;
 import com.insano10.explorerchallenge.maze.Direction;
@@ -15,15 +13,34 @@ import static com.insano10.explorerchallenge.explorer.world.World.worldInstance;
 public class TheSonOfDarcula implements Explorer
 {
 	private static final String NAME = "Darcula Jr.";
+    private final String name;
+    private final boolean continueAlongChosenDirection;
+    private final boolean isRandom;
+    private final boolean useTremaux;
+    private final boolean isSmartArse;
 
-	private Key key;
+    private Key key;
 	private Direction lastDirection;
-	private State currentState;
+	private ExplorerState currentExplorerState;
 
-	@Override
+    public TheSonOfDarcula()
+    {
+        this(false, false, false, false);
+    }
+
+    public TheSonOfDarcula(final boolean continueAlongChosenDirection, final boolean isRandom, final boolean useTremaux, final boolean isSmartArse)
+    {
+        this.continueAlongChosenDirection = continueAlongChosenDirection;
+        this.isRandom = isRandom;
+        this.useTremaux = useTremaux;
+        this.isSmartArse = isSmartArse;
+        this.name = NAME + (this.continueAlongChosenDirection ? " C" : "") + (this.isRandom ? " R" : "") + (this.useTremaux ? " T" : "")+ (this.isSmartArse ? " S" : "") ;
+    }
+
+    @Override
 	public String getName()
 	{
-		return NAME;
+		return name;
 	}
 
 	@Override
@@ -32,17 +49,13 @@ public class TheSonOfDarcula implements Explorer
 		key = null;
 		lastDirection = null;
 		worldInstance().reset();
-		//		currentState = StateFactory.getOrderedWanderingState();
-		currentState = StateFactory.getSmartOrderedWanderingState();
-		//		currentState = StateFactory.getRandomWanderingState();
-		//		currentState = StateFactory.getTremauxWanderingState();
-		//		currentState = StateFactory.getTremauxRandomWanderingState();
+        currentExplorerState = new ExplorerState(continueAlongChosenDirection, isRandom, useTremaux, isSmartArse);
 	}
 
 	@Override
 	public Direction whichWayNow(final Coordinate fromLocation, final Direction[] availableDirections)
 	{
-		lastDirection = currentState.getDirection(lastDirection, fromLocation, Utils.orderDirections(availableDirections));
+		lastDirection = currentExplorerState.getDirection(lastDirection, fromLocation, Utils.orderDirections(availableDirections));
 		return lastDirection;
 	}
 
@@ -72,7 +85,7 @@ public class TheSonOfDarcula implements Explorer
 		if (worldInstance().doorFound())
 		{
 			worldInstance().updateDoorCost();
-			currentState = StateFactory.getQuittingState();
+			currentExplorerState.itsQuittingTime();
 		}
 	}
 

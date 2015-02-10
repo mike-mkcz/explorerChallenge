@@ -89,6 +89,13 @@ public class ExplorerServlet extends HttpServlet
 
     private Explorer createExplorer()
     {
-        return new TheSonOfDarcula();
+        return new TheSonOfDarcula(); //Ordered Wanderer
+//        return new TheSonOfDarcula(true, false, false, false); //Ordered Direction Following Wanderer
+//        return new TheSonOfDarcula(false, true, false, false); //Random Wanderer
+//        return new TheSonOfDarcula(true, true, false, false); //Random Direction Following Wanderer
+//        return new TheSonOfDarcula(false, false, true, false); //Ordered Tremaux Wanderer
+//        return new TheSonOfDarcula(true, false, true, false); //Ordered Direction Following Tremaux Wanderer
+//        return new TheSonOfDarcula(false, true, true, false); //Random Tremaux Wanderer
+//        return new TheSonOfDarcula(true, true, true, false); //Random Direction Following Tremaux Wanderer
     }
 }
